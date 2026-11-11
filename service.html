@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3z'/></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Services | IvyPath Admissions Counseling</title>
+    <!-- Tailwind + FontAwesome -->
+    <script src="tailwind.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        /* ========== THEME VARIABLES (Ivy League / Academic Counseling: Collegiate Royal Blue + Gold) ========== */
+        :root,
+        html[data-theme='light'] {
+            --bg-body: #F8FAFC;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --accent: #2563EB; /* Inspiring Academic Blue */
+            --accent-dark: #1D4ED8;
+            --accent-light: #EFF6FF;
+            --gold: #F59E0B; /* Ivy Gold */
+            --primary: #1E3A8A; /* Deep Navy */
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+            --hover-bg: #F1F5F9;
+            --footer-bg: #0F172A;
+            --footer-text: #E2E8F0;
+            --rating-star: #F59E0B;
+        }
+
+        html[data-theme='dark'] {
+            color-scheme: dark;
+            --bg-body: #0A0F1D;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --accent: #3B82F6;
+            --accent-dark: #2563EB;
+            --accent-light: #1E293B;
+            --gold: #FBBF24;
+            --primary: #1E40AF;
+            --card-bg: #131D31;
+            --border-light: #1E293B;
+            --hover-bg: #1B2942;
+            --footer-bg: #070B14;
+            --footer-text: #CBD5E1;
+            --rating-star: #FBBF24;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.25s ease, color 0.2s;
+            overflow-x: hidden;
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .border-accent {
+            border-color: var(--accent);
+        }
+
+        .hover\:bg-accent\/10:hover {
+            background-color: color-mix(in srgb, var(--accent) 10%, transparent);
+        }
+
+        .bg-card {
+            background-color: var(--card-bg);
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .border-border {
+            border-color: var(--border-light);
+        }
+
+        /* Navbar + glassmorphic */
+        #main-header nav {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
+        }
+
+        html[data-theme='dark'] #main-header nav {
+            background: rgba(19, 29, 49, 0.92);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: 0.2s;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: 0.2s;
+            border-radius: 999px;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Dropdown style */
+        .dropdown-wrapper {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 0.75rem;
+            min-width: 220px;
+            padding: 0.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+            z-index: 100;
+        }
+
+        .dropdown-wrapper.open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.65rem 0.9rem;
+            color: var(--text-primary);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--hover-bg);
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white !important;
+            border-radius: 9999px;
+            transition: 0.2s;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+        }
+
+        .btn-outline {
+            border: 1.5px solid var(--accent);
+            color: var(--accent);
+            border-radius: 9999px;
+            background: transparent;
+            transition: 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .rating-star {
+            color: var(--rating-star);
+        }
+
+        @media (max-width: 1279px) {
+            .dropdown-menu {
+                position: static;
+                display: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                margin-top: 0.5rem;
+            }
+
+            .dropdown-wrapper.open .dropdown-menu {
+                display: block;
+            }
+        }
+
+        #mobile-drawer nav a:not(.rounded-full) {
+            position: relative;
+            transition: color 0.2s ease;
+            width: fit-content;
+        }
+
+        #mobile-drawer nav a.active:not(.rounded-full) {
+            color: var(--accent) !important;
+            font-weight: 600;
+        }
+
+        #mobile-drawer nav a.active:not(.rounded-full)::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent);
+            border-radius: 9999px;
+        }
+
+        /* RTL support */
+        html[dir="rtl"] #main-header .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+            margin-right: 2rem !important;
+            margin-left: 0 !important;
+        }
+        html[dir="rtl"] .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
+        html[dir="rtl"] .dropdown-menu a:hover {
+            transform: translateX(-4px);
+        }
+            /* Call/Phone icon facing opposite direction site-wide */
+        .fa-phone, .fa-phone-alt, .fa-phone-flip, .fa-phone-volume {
+            transform: scaleX(-1);
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Fixed Header -->
+    <header class="fixed top-0 left-0 right-0 w-full z-50 p-0 m-0" id="main-header" style="top: 0 !important; margin: 0 !important; padding: 0 !important;">
+        <nav class="w-full px-4 sm:px-6 md:px-10 py-2.5 sm:py-3 flex items-center justify-between backdrop-blur-md border-b border-border shadow-sm">
+                        <!-- Brand Logo & Icon -->
+            <a href="index.html" class="flex items-center gap-2.5 group shrink-0">
+                <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0">
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
+                </div>
+                <div class="flex flex-col text-left justify-center">
+                    <span class="text-base sm:text-lg md:text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+                        Admit<span class="text-accent font-extrabold">Edge</span>
+                    </span>
+                    <span class="text-[9px] sm:text-[9.5px] uppercase tracking-[0.16em] font-semibold text-slate-500 dark:text-slate-400 leading-tight">
+                        College Counseling
+                    </span>
+                </div>
+            </a>
+
+            <!-- Desktop Center Nav -->
+            <div class="hidden xl:flex items-center space-x-7 rtl:space-x-reverse text-sm font-medium">
+                <!-- Home Dropdown: HOME1 and HOME2 -->
+                <div class="dropdown-wrapper">
+                    <button class="nav-link dropdown-toggle flex items-center gap-1.5 whitespace-nowrap">
+                        <span>Home</span>
+                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 11.5l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="index.html" class="text-accent font-medium">HOME1</a>
+                        <a href="home2.html">HOME2</a>
+                    </div>
+                </div>
+
+                <!-- Services Nav Heading -->
+                <a href="service.html" class="nav-link active">Services</a>
+
+                <!-- Counselors Nav Heading -->
+                <a href="counselors.html" class="nav-link">Counselors</a>
+
+                <!-- About Nav Heading -->
+                <a href="about.html" class="nav-link">About Us</a>
+
+                <!-- Contact Nav Heading -->
+                <a href="contact.html" class="nav-link">Contact</a>
+
+                <!-- Dashboard Dropdown (After Contact): Admin and User Dashboard -->
+                <div class="dropdown-wrapper">
+                    <button class="nav-link dropdown-toggle flex items-center gap-1.5 whitespace-nowrap">
+                        <span class="flex items-center gap-1.5"><i class="fas fa-chart-pie text-xs text-accent"></i> Dashboard</span>
+                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 11.5l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="admin.html"><i class="fas fa-user-shield text-xs text-purple-500"></i> Admin Dashboard</a>
+                        <a href="user.html" class="text-accent font-medium"><i class="fas fa-user-graduate text-xs text-blue-500"></i> User Dashboard</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Actions (Theme, RTL, Login Portal) -->
+            <div class="hidden xl:flex items-center gap-3">
+                <button id="theme-toggle" class="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:border-accent hover:text-accent hover:bg-accent/10 transition-all text-secondary shadow-sm" title="Toggle Theme">
+                    <i class="fas fa-moon light-icon text-sm"></i><i class="fas fa-sun dark-icon hidden text-sm"></i>
+                </button>
+                <button id="lang-icon" class="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:border-accent hover:text-accent hover:bg-accent/10 transition-all text-secondary shadow-sm" title="Switch RTL/LTR">
+                    <i class="fas fa-exchange-alt text-sm"></i>
+                </button>
+                <a href="login.html" class="btn-outline px-4 py-2 text-sm font-medium flex items-center gap-1.5">
+                    <i class="fas fa-lock text-xs"></i> Student Login
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger -->
+            <div class="xl:hidden flex items-center gap-2">
+                <button id="mobile-menu-open" class="p-2 text-slate-800 dark:text-white" aria-label="Open navigation menu">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer" class="fixed inset-0 z-50 pointer-events-none transition-all duration-300">
+        <div id="drawer-backdrop" class="absolute inset-0 bg-black/60 opacity-0 transition pointer-events-none backdrop-blur-sm"></div>
+        <div id="drawer-panel" class="absolute top-0 left-0 w-80 h-full bg-card shadow-2xl transform -translate-x-full transition-transform duration-300 p-6 overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-border pb-4">
+                <a href="index.html" class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
+                        <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col text-left">
+                        <span class="text-lg font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+                            Admit<span class="text-accent font-extrabold">Edge</span>
+                        </span>
+                        <span class="text-[9px] uppercase tracking-[0.15em] font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
+                            College Counseling
+                        </span>
+                    </div>
+                </a>
+                <button id="drawer-close" class="p-2 text-secondary hover:text-accent"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <nav class="flex flex-col gap-2.5 mt-5">
+                <!-- Mobile Home Dropdown: HOME1 and HOME2 -->
+                <div>
+                    <button id="mobile-home-toggle" class="flex w-full justify-between items-center py-2 font-medium text-secondary hover:text-accent">
+                        <span>Home</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div id="mobile-home-submenu" class="pl-3 flex flex-col gap-2 mt-1 border-l-2 border-accent/30 text-sm hidden">
+                        <a href="index.html" class="text-secondary hover:text-accent py-1">HOME1</a>
+                        <a href="home2.html" class="text-secondary hover:text-accent py-1">HOME2</a>
+                    </div>
+                </div>
+
+                <a href="service.html" class="py-2 font-medium text-accent active">Services</a>
+                <a href="counselors.html" class="py-2 font-medium text-secondary hover:text-accent">Counselors</a>
+                <a href="about.html" class="py-2 font-medium text-secondary hover:text-accent">About Us</a>
+                <a href="contact.html" class="py-2 font-medium text-secondary hover:text-accent">Contact</a>
+
+                <!-- Mobile Dashboard Dropdown after Contact: Admin and User Dashboard -->
+                <div>
+                    <button id="mobile-dashboard-toggle" class="flex w-full justify-between items-center py-2 font-medium text-secondary hover:text-accent">
+                        <span class="flex items-center gap-2"><i class="fas fa-chart-pie text-accent text-xs"></i> Dashboard</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div id="mobile-dashboard-submenu" class="pl-3 flex flex-col gap-2 mt-1 border-l-2 border-accent/30 text-sm hidden">
+                        <a href="admin.html" class="text-secondary hover:text-accent py-1"><i class="fas fa-user-shield text-xs mr-1 text-purple-500"></i> Admin Dashboard</a>
+                        <a href="user.html" class="text-secondary hover:text-accent py-1"><i class="fas fa-user-graduate text-xs mr-1 text-blue-500"></i> User Dashboard</a>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-border mt-3 space-y-2.5">
+                    <a href="login.html" class="block w-full text-center border border-accent text-accent rounded-full py-2.5 font-medium shadow-sm hover:bg-accent hover:text-white transition-all">
+                        <i class="fas fa-lock mr-2 text-xs"></i> Student Login
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    
+
+<main>
+    <!-- ==========================================
+         SECTION 1: HERO / INTRODUCTION
+         Clean professional split: text left, framed visual right
+         ========================================== -->
+    <section class="relative pt-24 pb-14 lg:pt-32 lg:pb-20 overflow-hidden border-b border-gray-100 dark:border-gray-800 bg-gradient-to-b from-blue-50/60 via-white to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+          <!-- Left: Copy -->
+          <div class="space-y-5">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200">
+              <i class="fas fa-concierge-bell text-[10px]"></i> Our Services
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-[1.12]">
+              Expert Guidance,
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                Tailored to Your Journey.
+              </span>
+            </h1>
+
+            <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed max-w-xl">
+              Six focused service tracks — each delivered 1-on-1 by a former admissions officer. Choose one, combine several, or go full comprehensive. Every engagement includes dashboard access and a 48-hour essay turnaround guarantee.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-3 pt-1">
+              <a href="contact.html" class="inline-flex justify-center items-center px-5 py-2.5 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/25 transition-all text-sm">
+                <i class="fas fa-calendar-check mr-2"></i> Book Free Evaluation
+              </a>
+              <a href="#service-categories" class="inline-flex justify-center items-center px-5 py-2.5 rounded-xl font-semibold text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm">
+                <i class="fas fa-compass mr-2 text-indigo-500"></i> Browse Services
+              </a>
+            </div>
+
+            <!-- Trust strip -->
+            <div class="pt-5 mt-2 border-t border-gray-200 dark:border-gray-700 grid grid-cols-3 gap-4">
+              <div>
+                <p class="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white">1,850+</p>
+                <p class="text-[11px] text-gray-500 dark:text-gray-400 font-medium">Students Served</p>
+              </div>
+              <div>
+                <p class="text-xl sm:text-2xl font-extrabold text-blue-600 dark:text-blue-400">96.8%</p>
+                <p class="text-[11px] text-gray-500 dark:text-gray-400 font-medium">Top-3 Admits</p>
+              </div>
+              <div>
+                <p class="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white">48 hrs</p>
+                <p class="text-[11px] text-gray-500 dark:text-gray-400 font-medium">Essay Turnaround</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Framed visual -->
+          <div class="relative">
+            <div class="rounded-2xl overflow-hidden shadow-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+              <img src="assets/s1.jpg" alt="Admissions counseling session" class="w-full h-64 sm:h-80 lg:h-[400px] object-cover" />
+            </div>
+            <!-- Floating badge -->
+            <div class="absolute -bottom-4 -left-4 sm:bottom-6 sm:-left-6 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-gray-200 dark:border-gray-700 max-w-[220px]">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-lg bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center text-emerald-600 shrink-0">
+                  <i class="fas fa-user-check text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-gray-900 dark:text-white">Former AO Match</div>
+                  <div class="text-[10px] text-gray-500 dark:text-gray-400">Every service, every time</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 2: MAIN SERVICE CATEGORIES
+         Clean 6-card grid — consistent sizing, subtle differentiation
+         ========================================== -->
+    <section id="service-categories" class="py-16 lg:py-24 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span class="text-xs font-semibold tracking-[0.25em] uppercase text-blue-600 dark:text-blue-400">Service Directory</span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white mt-2 mb-3">
+            Six Tracks. One Proven System.
+          </h2>
+          <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+            Choose a focused track or combine several — every service is led by a former admissions reader with direct experience in your target tier.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <!-- Card 1 -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col h-full">
+            <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl mb-4">
+              <i class="fas fa-feather-alt"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Essay Coaching</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1 mb-4">
+              Personal statements, supplements, and UC PIQs — brainstormed and edited line-by-line by former admissions officers.
+            </p>
+            <a href="#service-essays" class="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
+              Learn More <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col h-full">
+            <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl mb-4">
+              <i class="fas fa-user-tie"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Interview Prep</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1 mb-4">
+              Mock alumni and admissions interviews with recorded feedback, rubric scoring, and body-language coaching.
+            </p>
+            <a href="#service-interviews" class="inline-flex items-center text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline">
+              Learn More <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col h-full">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl mb-4">
+              <i class="fas fa-microscope"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Spike & Research</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1 mb-4">
+              Build a distinctive academic identity through university lab placements, publications, and national competitions.
+            </p>
+            <a href="#service-spike" class="inline-flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
+              Learn More <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col h-full">
+            <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl mb-4">
+              <i class="fas fa-chess-knight"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">School List Strategy</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1 mb-4">
+              Build a balanced Reach / Target / Safety list and optimize ED / EA timing for maximum statistical leverage.
+            </p>
+            <a href="contact.html" class="inline-flex items-center text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline">
+              Learn More <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col h-full">
+            <div class="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center text-xl mb-4">
+              <i class="fas fa-clipboard-check"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Application Management</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1 mb-4">
+              Deadlines, document tracking, recommendation coordination, and portal submission — fully managed for you.
+            </p>
+            <a href="contact.html" class="inline-flex items-center text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline">
+              Learn More <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col h-full">
+            <div class="w-12 h-12 rounded-xl bg-cyan-100 dark:bg-cyan-900/50 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-xl mb-4">
+              <i class="fas fa-globe-americas"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">International Applicants</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1 mb-4">
+              Specialized guidance for IB / A-Level curricula, TOEFL strategy, visa timelines, and financial aid for global students.
+            </p>
+            <a href="contact.html" class="inline-flex items-center text-xs font-bold text-cyan-600 dark:text-cyan-400 hover:underline">
+              Learn More <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 3: KEY SERVICE OFFERINGS
+         Clean alternating split rows — balanced, professional
+         ========================================== -->
+    <section class="py-16 lg:py-24 bg-gray-50 dark:bg-gray-950/60 border-b border-gray-100 dark:border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span class="text-xs font-semibold tracking-[0.25em] uppercase text-blue-600 dark:text-blue-400">Flagship Services</span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white mt-2 mb-3">
+            Three Services That Move the Needle Most
+          </h2>
+          <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+            The highest-impact tracks our students request — each delivered 1-on-1 with unlimited revisions.
+          </p>
+        </div>
+
+        <div class="space-y-8 lg:space-y-10">
+
+          <!-- Row 1: Essay Coaching -->
+          <div id="service-essays" class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+              <div class="h-64 sm:h-72 lg:h-[340px] xl:h-[360px] overflow-hidden">
+                <img src="assets/q1.jpg" alt="Essay coaching session" class="w-full h-full object-cover object-top" />
+              </div>
+              <div class="p-6 sm:p-8 lg:p-8 flex flex-col justify-center">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-50 text-blue-700 dark:bg-blue-950/80 dark:text-blue-300">Most Popular</span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">• 48-hour turnaround</span>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                  Personal Statement & Supplemental Essay Coaching
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                  Transform raw drafts into unforgettable narrative prose. Deep brainstorming workshops followed by multiple rounds of line-by-line developmental edits until every sentence earns its place.
+                </p>
+                <ul class="space-y-1.5 text-sm text-gray-600 dark:text-gray-400 mb-5">
+                  <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500 shrink-0"></i> Common App + UC PIQs + 10 supplements</li>
+                  <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500 shrink-0"></i> 48-hour feedback guarantee</li>
+                  <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500 shrink-0"></i> Former AO scoring rubric included</li>
+                </ul>
+                <a href="contact.html" class="inline-flex items-center text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                  Book Essay Coaching <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2: Interview Prep (image right on desktop) -->
+          <div id="service-interviews" class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+              <div class="p-6 sm:p-8 lg:p-8 flex flex-col justify-center order-2 lg:order-1">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-purple-50 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300">High-Stakes Prep</span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">• Recorded sessions</span>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                  Ivy League & Alumni Mock Interview Preparation
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                  Simulate real admissions and alumni interviews with former committee interviewers. Every session is recorded, scored against a real rubric, and followed by a targeted improvement plan.
+                </p>
+                <ul class="space-y-1.5 text-sm text-gray-600 dark:text-gray-400 mb-5">
+                  <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500 shrink-0"></i> Behavioral & curveball question drills</li>
+                  <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500 shrink-0"></i> Body language & delivery coaching</li>
+                  <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500 shrink-0"></i> Post-session rubric scorecard</li>
+                </ul>
+                <a href="contact.html" class="inline-flex items-center text-sm font-bold text-purple-600 dark:text-purple-400 hover:underline">
+                  Book Interview Prep <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                </a>
+              </div>
+              <div class="h-64 sm:h-72 lg:h-[340px] xl:h-[360px] overflow-hidden order-1 lg:order-2">
+                <img src="assets/q2.jpg" alt="Mock interview session" class="w-full h-full object-cover object-top" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3: Spike Mentorship -->
+          <div id="service-spike" class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+              <div class="h-64 sm:h-72 lg:h-[340px] xl:h-[360px] overflow-hidden">
+                <img src="assets/q3.jpg" alt="Research mentorship" class="w-full h-full object-cover object-top" />
+              </div>
+              <div class="p-6 sm:p-8 lg:p-8 flex flex-col justify-center">
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300">Long-Term Advantage</span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">• Best for 9th–11th grade</span>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                  Extracurricular "Spike" & Research Mentorship
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                  Design a distinctive intellectual identity through university lab placements, peer-reviewed publications, non-profit founding, and national competition entries.
+                </p>
+                <ul class="space-y-1.5 text-sm text-gray-600 dark:text-gray-400 mb-5">
+                  <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500 shrink-0"></i> Capstone project mentorship</li>
+                  <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500 shrink-0"></i> University lab research connections</li>
+                  <li class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500 shrink-0"></i> Common App 150-character optimization</li>
+                </ul>
+                <a href="contact.html" class="inline-flex items-center text-sm font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
+                  Book Spike Mentorship <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 4: HOW ENGAGEMENT WORKS
+         Clean 3-step horizontal grid + pricing snapshot row
+         ========================================== -->
+    <section class="py-16 lg:py-24 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span class="text-xs font-semibold tracking-[0.25em] uppercase text-blue-600 dark:text-blue-400">How Engagement Works</span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white mt-2 mb-3">
+            From First Call to Kickoff in Under a Week
+          </h2>
+          <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+            A streamlined onboarding process designed to match you with the right counselor and start real work within 5 business days.
+          </p>
+        </div>
+
+        <!-- 3 Steps -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+          <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-10 h-10 rounded-full bg-blue-600 text-white font-extrabold text-sm flex items-center justify-center">1</span>
+              <span class="text-[11px] font-bold text-gray-400">STEP 01</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Free 45-Minute Diagnostic</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1 mb-4">
+              We review your transcript, testing, extracurriculars, and goals — then identify exactly which services would move your profile forward.
+            </p>
+            <div class="pt-3 border-t border-gray-200 dark:border-gray-700 text-[11px] font-medium text-blue-600 dark:text-blue-400">
+              <i class="fas fa-file-alt mr-1"></i> Diagnostic Report + Service Recommendation
+            </div>
+          </div>
+
+          <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-10 h-10 rounded-full bg-indigo-600 text-white font-extrabold text-sm flex items-center justify-center">2</span>
+              <span class="text-[11px] font-bold text-gray-400">STEP 02</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Custom Plan & Counselor Match</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1 mb-4">
+              We build a personalized service plan and match you with a former admissions officer who has direct experience in your target field and tier.
+            </p>
+            <div class="pt-3 border-t border-gray-200 dark:border-gray-700 text-[11px] font-medium text-indigo-600 dark:text-indigo-400">
+              <i class="fas fa-file-contract mr-1"></i> Service Agreement + Counselor Assignment
+            </div>
+          </div>
+
+          <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 flex flex-col h-full">
+            <div class="flex items-center justify-between mb-4">
+              <span class="w-10 h-10 rounded-full bg-emerald-600 text-white font-extrabold text-sm flex items-center justify-center">3</span>
+              <span class="text-[11px] font-bold text-gray-400">STEP 03</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Kickoff Within 5 Business Days</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1 mb-4">
+              Your first working session is scheduled, your student dashboard is activated, and your counselor begins delivering feedback.
+            </p>
+            <div class="pt-3 border-t border-gray-200 dark:border-gray-700 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+              <i class="fas fa-rocket mr-1"></i> First Session + Dashboard Access
+            </div>
+          </div>
+        </div>
+
+        <!-- Pricing Snapshot -->
+        <div class="bg-gradient-to-br from-slate-50 to-blue-50/50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 sm:p-8 border border-gray-200 dark:border-gray-700">
+          <div class="text-center mb-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Flexible Engagement Models</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">All plans include a dedicated counselor, dashboard access, and 48-hour essay turnaround.</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 text-center">
+              <div class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Hourly</div>
+              <div class="text-2xl font-extrabold text-gray-900 dark:text-white">$180<span class="text-sm font-medium text-gray-500">/hr</span></div>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">Pay only for the sessions you need. Ideal for targeted edits or single interview prep.</p>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-blue-500 dark:border-blue-400 text-center relative">
+              <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-blue-600 text-white whitespace-nowrap">Most Flexible</span>
+              <div class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-2">Package</div>
+              <div class="text-2xl font-extrabold text-gray-900 dark:text-white">$2,400<span class="text-sm font-medium text-gray-500">/mo</span></div>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">8 sessions per month, unlimited async essay feedback, and priority scheduling.</p>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 text-center">
+              <div class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Comprehensive</div>
+              <div class="text-2xl font-extrabold text-gray-900 dark:text-white">Custom</div>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">Full-cycle end-to-end counseling from 9th grade through matriculation.</p>
+            </div>
+
+          </div>
+          <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-5">
+            <a href="contact.html" class="text-blue-600 dark:text-blue-400 font-semibold hover:underline">Request full pricing sheet →</a>
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 5: TRUST & FEATURED CONTENT
+         Clean two-column: FAQ accordion left, testimonial cards right
+         ========================================== -->
+    <section class="py-16 lg:py-24 bg-gray-50 dark:bg-gray-950/60 border-b border-gray-100 dark:border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span class="text-xs font-semibold tracking-[0.25em] uppercase text-blue-600 dark:text-blue-400">Questions & Real Results</span>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white mt-2 mb-3">
+            Everything You Need to Know Before Booking
+          </h2>
+          <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+            Common questions answered — alongside real student outcomes from our flagship services.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+
+          <!-- Left: FAQ Accordion -->
+          <div class="space-y-3">
+
+            <div class="faq-item bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <button class="faq-toggle w-full flex items-center justify-between gap-4 p-5 text-left">
+                <span class="text-sm font-bold text-gray-900 dark:text-white">Do you guarantee admission to any university?</span>
+                <i class="fas fa-plus text-xs text-gray-500 faq-icon transition-transform shrink-0"></i>
+              </button>
+              <div class="faq-content hidden px-5 pb-5">
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">No — and any counselor who does is violating NACAC ethics. What we guarantee is that your application will be objectively stronger, more distinctive, and strategically positioned. 96.8% of our students are admitted to at least one of their top three choices.</p>
+              </div>
+            </div>
+
+            <div class="faq-item bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <button class="faq-toggle w-full flex items-center justify-between gap-4 p-5 text-left">
+                <span class="text-sm font-bold text-gray-900 dark:text-white">How fast is essay feedback really?</span>
+                <i class="fas fa-plus text-xs text-gray-500 faq-icon transition-transform shrink-0"></i>
+              </button>
+              <div class="faq-content hidden px-5 pb-5">
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">Our standard turnaround is 48 hours for full line-by-line feedback on any draft. During peak season (October–December), we maintain the same guarantee — or the next round is free.</p>
+              </div>
+            </div>
+
+            <div class="faq-item bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <button class="faq-toggle w-full flex items-center justify-between gap-4 p-5 text-left">
+                <span class="text-sm font-bold text-gray-900 dark:text-white">Can I switch counselors if the match isn't right?</span>
+                <i class="fas fa-plus text-xs text-gray-500 faq-icon transition-transform shrink-0"></i>
+              </button>
+              <div class="faq-content hidden px-5 pb-5">
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">Absolutely. We offer a no-questions-asked counselor switch within the first two weeks. After that, we'll still accommodate a switch if there's a documented conflict of expertise or scheduling.</p>
+              </div>
+            </div>
+
+            <div class="faq-item bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <button class="faq-toggle w-full flex items-center justify-between gap-4 p-5 text-left">
+                <span class="text-sm font-bold text-gray-900 dark:text-white">Do you write essays for students?</span>
+                <i class="fas fa-plus text-xs text-gray-500 faq-icon transition-transform shrink-0"></i>
+              </button>
+              <div class="faq-content hidden px-5 pb-5">
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">Never. Our role is to teach you how to find your authentic voice, structure a compelling narrative, and edit with precision. Every sentence in your final essay must be yours — that's both an ethical requirement and the key to a genuinely memorable application.</p>
+              </div>
+            </div>
+
+            <div class="faq-item bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <button class="faq-toggle w-full flex items-center justify-between gap-4 p-5 text-left">
+                <span class="text-sm font-bold text-gray-900 dark:text-white">What grade should I start in?</span>
+                <i class="fas fa-plus text-xs text-gray-500 faq-icon transition-transform shrink-0"></i>
+              </button>
+              <div class="faq-content hidden px-5 pb-5">
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">The earlier the better for spike-building — 9th or 10th grade is ideal. For essay coaching and interview prep, 11th grade spring or 12th grade fall is the sweet spot. We tailor every plan to your current stage.</p>
+              </div>
+            </div>
+
+            <div class="faq-item bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <button class="faq-toggle w-full flex items-center justify-between gap-4 p-5 text-left">
+                <span class="text-sm font-bold text-gray-900 dark:text-white">Is my information kept confidential?</span>
+                <i class="fas fa-plus text-xs text-gray-500 faq-icon transition-transform shrink-0"></i>
+              </button>
+              <div class="faq-content hidden px-5 pb-5">
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">Yes. All records are stored in FERPA-compliant systems and never shared with third parties. Counselors sign annual confidentiality agreements, and parents/students can request data deletion at any time.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right: Testimonial Cards -->
+          <div class="space-y-4">
+
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+              <div class="flex items-center gap-1 text-amber-500 mb-3">
+                <i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i>
+              </div>
+              <p class="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed mb-4">
+                "The essay coaching completely changed how I approached my personal statement. I went from a generic draft to a story that felt unmistakably mine. Accepted to Yale."
+              </p>
+              <div class="flex items-center gap-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop" alt="Student" class="w-9 h-9 rounded-full object-cover shrink-0" />
+                <div class="min-w-0">
+                  <div class="text-xs font-bold text-gray-900 dark:text-white truncate">Priya M.</div>
+                  <div class="text-[11px] text-gray-500 dark:text-gray-400 truncate">Yale '28 · Essay Coaching</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+              <div class="flex items-center gap-1 text-amber-500 mb-3">
+                <i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i>
+              </div>
+              <p class="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed mb-4">
+                "The mock interviews were brutal in the best way. My counselor caught every nervous habit and helped me build answers that felt natural. I walked into my MIT interview genuinely confident."
+              </p>
+              <div class="flex items-center gap-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop" alt="Student" class="w-9 h-9 rounded-full object-cover shrink-0" />
+                <div class="min-w-0">
+                  <div class="text-xs font-bold text-gray-900 dark:text-white truncate">Daniel R.</div>
+                  <div class="text-[11px] text-gray-500 dark:text-gray-400 truncate">MIT '28 · Interview Prep</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 sm:p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+              <div class="flex items-center gap-1 text-amber-500 mb-3">
+                <i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i><i class="fas fa-star text-xs"></i>
+              </div>
+              <p class="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed mb-4">
+                "Starting spike mentorship in 10th grade was the best decision I made. By senior year I had a published research paper and a non-profit I founded — that combination got me into Stanford."
+              </p>
+              <div class="flex items-center gap-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop" alt="Student" class="w-9 h-9 rounded-full object-cover shrink-0" />
+                <div class="min-w-0">
+                  <div class="text-xs font-bold text-gray-900 dark:text-white truncate">Sofia L.</div>
+                  <div class="text-[11px] text-gray-500 dark:text-gray-400 truncate">Stanford '28 · Spike Mentorship</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 6: FINAL CTA / CLOSING
+         Clean centered banner with compact form
+         ========================================== -->
+    <section class="py-16 lg:py-24 relative overflow-hidden bg-gradient-to-br from-blue-900 via-indigo-950 to-slate-900">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-10 shadow-2xl border border-white/10">
+
+          <div class="text-center mb-8">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 mb-4">
+              Free · 45 Minutes · No Obligation
+            </span>
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
+              Not Sure Which Service Fits?
+            </h2>
+            <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto">
+              In one call, a former admissions officer will review your profile, identify your biggest gaps, and recommend exactly which services would move you forward. No sales pressure — just actionable strategy.
+            </p>
+          </div>
+
+          <form onsubmit="event.preventDefault(); alert('Thank you! Your free diagnostic request has been received. A senior counselor will contact you within 24 hours.');" class="max-w-xl mx-auto space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Student Full Name</label>
+                <input type="text" placeholder="Alex Morgan" required class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                <input type="email" placeholder="alex@example.com" required class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">High School Graduation Year</label>
+                <select class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option>Class of 2025 (Senior)</option>
+                  <option selected>Class of 2026 (Junior)</option>
+                  <option>Class of 2027 (Sophomore)</option>
+                  <option>Class of 2028 (Freshman)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Primary Service Interest</label>
+                <select class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option>Essay Coaching</option>
+                  <option>Interview Preparation</option>
+                  <option>Extracurricular Spike & Research</option>
+                  <option>School List Strategy</option>
+                  <option>Application Management</option>
+                  <option>International Applicant Support</option>
+                  <option>Not sure — need a recommendation</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="w-full py-3 px-6 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all text-sm flex items-center justify-center gap-2">
+              <i class="fas fa-calendar-check"></i> Confirm Free Diagnostic
+            </button>
+            <p class="text-[11px] text-center text-gray-400 pt-1">
+              🔒 FERPA-compliant · No sales pressure · Cancel anytime
+            </p>
+          </form>
+
+          <div class="text-center mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <a href="index.html#packages" class="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline">
+              Compare all packages on our homepage <i class="fas fa-arrow-right ml-2 text-xs"></i>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+</main>
+
+    <!-- Footer -->
+    <footer class="pt-16 pb-8 border-t border-slate-800" style="background: var(--footer-bg); color: var(--footer-text);">
+        <div class="max-w-7xl mx-auto px-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+            <div class="col-span-2 md:col-span-2 lg:col-span-1">
+                <a href="index.html" class="flex items-center gap-2.5 mb-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col text-left">
+                        <span class="text-lg font-bold tracking-tight text-white leading-none">
+                            Admit<span class="text-blue-400 font-extrabold">Edge</span>
+                        </span>
+                        <span class="text-[9px] uppercase tracking-[0.16em] font-semibold text-slate-400 mt-0.5">
+                            College Counseling
+                        </span>
+                    </div>
+                </a>
+                <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+                    Premier college admissions counseling, personal statement coaching, and interview preparation for ambitious students worldwide.
+                </p>
+                <div class="mt-4 space-y-2 text-xs text-slate-300">
+                    <p class="flex items-center gap-2"><i class="fas fa-phone text-blue-400 inline-block"></i> (800) 489-PATH (4728)</p>
+                    <p class="flex items-center gap-2"><i class="far fa-envelope text-blue-400"></i> admissions@admitedge.com</p>
+                    <p class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-blue-400"></i> Boston, MA & Global Online Hub</p>
+                </div>
+                <div class="flex gap-2.5 mt-5">
+                    <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white" aria-label="LinkedIn"><i class="fab fa-linkedin-in text-xs"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white" aria-label="YouTube"><i class="fab fa-youtube text-xs"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-accent flex items-center justify-center transition-all duration-300 text-white" aria-label="Instagram"><i class="fab fa-instagram text-xs"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-sm tracking-wider uppercase text-white mb-4">Admissions Services</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="service.html" class="hover:text-accent transition-colors">Essay Brainstorming & Review</a></li>
+                    <li><a href="service.html" class="hover:text-accent transition-colors">Mock Admissions Interviews</a></li>
+                    <li><a href="service.html" class="hover:text-accent transition-colors">Extracurricular Spike Mentorship</a></li>
+                    <li><a href="service.html" class="hover:text-accent transition-colors">Early Decision Strategy</a></li>
+                    <li><a href="service.html" class="hover:text-accent transition-colors">International Applicant Guidance</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-sm tracking-wider uppercase text-white mb-4">Student Dashboard</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="#dashboard-checklists" class="hover:text-accent transition-colors">Application Checklists</a></li>
+                    <li><a href="#dashboard-essays" class="hover:text-accent transition-colors">Live Essay Feedback</a></li>
+                    <li><a href="#dashboard-meetings" class="hover:text-accent transition-colors">Counselor Meeting Schedule</a></li>
+                    <li><a href="login.html" class="hover:text-accent transition-colors">Student Login Portal</a></li>
+                    <li><a href="#dashboard-overview" class="hover:text-accent transition-colors">Document Tracker</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-sm tracking-wider uppercase text-white mb-4">Counseling & Trust</h4>
+                <ul class="text-xs space-y-2.5 text-slate-400">
+                    <li><a href="counselors.html" class="hover:text-accent transition-colors">Former Admissions Officers</a></li>
+                    <li><a href="about.html" class="hover:text-accent transition-colors">Admissions Philosophy</a></li>
+                    <li><a href="#results-stats" class="hover:text-accent transition-colors">Student Acceptance Results</a></li>
+                    <li><a href="about.html" class="hover:text-accent transition-colors">NACAC Ethics & Standards</a></li>
+                    <li><a href="contact.html" class="hover:text-accent transition-colors">Book Free Evaluation</a></li>
+                </ul>
+            </div>
+
+            <div class="col-span-2 md:col-span-3 lg:col-span-1">
+                <h4 class="font-semibold text-sm tracking-wider uppercase text-white mb-4">Admissions Newsletter</h4>
+                <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+                    Get monthly Ivy League acceptance trends, essay breakdown guides, and deadline alerts.
+                </p>
+                <form class="flex gap-2 max-w-xs" onsubmit="event.preventDefault(); alert('Subscribed to Admissions Insights!');">
+                    <input type="email" placeholder="Student or parent email" required class="bg-slate-800 border border-slate-700 text-white text-xs rounded-lg px-3 py-2 w-full focus:outline-none focus:border-accent transition-colors">
+                    <button type="submit" class="bg-accent text-white px-3 py-2 rounded-lg text-xs font-medium hover:opacity-90 transition-opacity" aria-label="Subscribe">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-5 mt-12 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+            <p>© 2026 AdmitEdge Admissions Counseling. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="contact.html" class="hover:text-accent transition-colors">Privacy Policy</a>
+                <a href="contact.html" class="hover:text-accent transition-colors">Terms of Service</a>
+                <a href="contact.html" class="hover:text-accent transition-colors">FERPA & Student Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        (function () {
+            const html = document.documentElement;
+
+            // Theme toggles
+            const themeBtn = document.getElementById('theme-toggle');
+            const mobileTheme = document.getElementById('mobile-theme-btn');
+            const applyTheme = (theme) => {
+                html.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                document.querySelectorAll('.light-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'dark'));
+                document.querySelectorAll('.dark-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'light'));
+            };
+            const initTheme = () => {
+                const stored = localStorage.getItem('theme');
+                const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                applyTheme(stored === 'dark' || (!stored && prefers) ? 'dark' : 'light');
+            };
+            const toggleTheme = () => {
+                const cur = html.getAttribute('data-theme');
+                applyTheme(cur === 'light' ? 'dark' : 'light');
+            };
+            themeBtn?.addEventListener('click', toggleTheme);
+            if (mobileTheme) mobileTheme.addEventListener('click', toggleTheme);
+            initTheme();
+
+            // RTL Switcher
+            const langBtn = document.getElementById('lang-icon');
+            const mobileRtl = document.getElementById('mobile-rtl-btn');
+            const toggleRtl = () => {
+                const isRtl = html.getAttribute('dir') === 'rtl';
+                html.setAttribute('dir', isRtl ? 'ltr' : 'rtl');
+                localStorage.setItem('dir', isRtl ? 'ltr' : 'rtl');
+            };
+            if (langBtn) langBtn.addEventListener('click', toggleRtl);
+            if (mobileRtl) mobileRtl.addEventListener('click', toggleRtl);
+            const savedDir = localStorage.getItem('dir') === 'rtl' ? 'rtl' : 'ltr';
+            html.setAttribute('dir', savedDir);
+
+            // Dropdown controls for desktop
+            document.querySelectorAll('.dropdown-wrapper').forEach(drop => {
+                const btn = drop.querySelector('.dropdown-toggle');
+                if (window.innerWidth >= 1280) {
+                    drop.addEventListener('mouseenter', () => drop.classList.add('open'));
+                    drop.addEventListener('mouseleave', () => drop.classList.remove('open'));
+                } else {
+                    btn?.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        drop.classList.toggle('open');
+                    });
+                }
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.dropdown-wrapper')) {
+                    document.querySelectorAll('.dropdown-wrapper').forEach(d => d.classList.remove('open'));
+                }
+            });
+
+            // Mobile drawer open/close
+            const drawer = document.getElementById('mobile-drawer');
+            const backdrop = document.getElementById('drawer-backdrop');
+            const panel = document.getElementById('drawer-panel');
+            const openBtn = document.getElementById('mobile-menu-open');
+            const closeBtn = document.getElementById('drawer-close');
+
+            const openDrawer = () => {
+                drawer.classList.remove('pointer-events-none');
+                panel.classList.remove('-translate-x-full');
+                backdrop.classList.add('opacity-100', 'pointer-events-auto');
+                document.body.style.overflow = 'hidden';
+            };
+            const closeDrawer = () => {
+                panel.classList.add('-translate-x-full');
+                backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+                setTimeout(() => drawer.classList.add('pointer-events-none'), 300);
+                document.body.style.overflow = '';
+            };
+
+            openBtn?.addEventListener('click', openDrawer);
+            closeBtn?.addEventListener('click', closeDrawer);
+            backdrop?.addEventListener('click', closeDrawer);
+
+            // Submenu toggles in mobile drawer
+            document.getElementById('mobile-home-toggle')?.addEventListener('click', () => {
+                document.getElementById('mobile-home-submenu')?.classList.toggle('hidden');
+            });
+            document.getElementById('mobile-dashboard-toggle')?.addEventListener('click', () => {
+                document.getElementById('mobile-dashboard-submenu')?.classList.toggle('hidden');
+            });
+
+            // Close mobile drawer on link click
+            drawer?.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    closeDrawer();
+                });
+            });
+            // FAQ Accordion
+document.querySelectorAll('.faq-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+        const icon = btn.querySelector('.faq-icon');
+        content.classList.toggle('hidden');
+        if (icon) icon.classList.toggle('rotate-45');
+    });
+});
+            // Smooth scrolling for in-page anchors
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId && targetId !== '#') {
+                        const targetElem = document.querySelector(targetId);
+                        if (targetElem) {
+                            e.preventDefault();
+                            targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                });
+            });
+                    // Dual Dashboard Switcher (User vs Admin)
+            window.switchDashboardView = function(view) {
+                const userContainer = document.querySelector('#dashboard .grid.grid-cols-1.lg\\:grid-cols-3');
+                const adminContainer = document.getElementById('admin-dashboard-container');
+                const btnUser = document.getElementById('btn-tab-user');
+                const btnAdmin = document.getElementById('btn-tab-admin');
+                const heading = document.getElementById('dash-heading');
+                const subheading = document.getElementById('dash-subheading');
+                const name = document.getElementById('dash-profile-name');
+                const role = document.getElementById('dash-profile-role');
+                const avatar = document.getElementById('dash-profile-avatar');
+
+                if (view === 'admin') {
+                    if (userContainer) userContainer.classList.add('hidden');
+                    if (adminContainer) adminContainer.classList.remove('hidden');
+                    if (btnAdmin) { btnAdmin.classList.add('bg-purple-600', 'text-white'); btnAdmin.classList.remove('text-slate-300'); }
+                    if (btnUser) { btnUser.classList.remove('bg-blue-600', 'text-white'); btnUser.classList.add('text-slate-300'); }
+                    if (heading) heading.textContent = 'Admissions Admin Control Panel';
+                    if (subheading) subheading.textContent = 'Master administration portal: supervise student pipelines, reviewer essay turnaround, and counselor allocation.';
+                    if (name) name.textContent = 'Dean Sterling';
+                    if (role) role.textContent = 'Admissions Director · Head of Counseling';
+                    if (avatar) avatar.src = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=150&auto=format&fit=crop';
+                } else {
+                    if (userContainer) userContainer.classList.remove('hidden');
+                    if (adminContainer) adminContainer.classList.add('hidden');
+                    if (btnUser) { btnUser.classList.add('bg-blue-600', 'text-white'); btnUser.classList.remove('text-slate-300'); }
+                    if (btnAdmin) { btnAdmin.classList.remove('bg-purple-600', 'text-white'); btnAdmin.classList.add('text-slate-300'); }
+                    if (heading) heading.textContent = 'Student Application Dashboard';
+                    if (subheading) subheading.textContent = 'Live transparency for student progress: track application checklists, essay reviews, and 1-on-1 counselor meetings.';
+                    if (name) name.textContent = 'Maya Lin';
+                    if (role) role.textContent = 'Class of 2027 · Early Action';
+                    if (avatar) avatar.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop';
+                }
+            };
+
+            // Detect hash on load or click for dashboard routing
+            function checkDashboardHash() {
+                if (window.location.hash === '#admin-dashboard') {
+                    window.switchDashboardView('admin');
+                } else if (window.location.hash === '#user-dashboard' || window.location.hash === '#dashboard-overview') {
+                    window.switchDashboardView('user');
+                }
+            }
+            window.addEventListener('hashchange', checkDashboardHash);
+            checkDashboardHash();
+
+            // Dynamic Active Page Highlighter (Desktop & Mobile)
+        })();
+    </script>
+</body>
+</html>

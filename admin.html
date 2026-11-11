@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3z'/></svg>">
+  <title>AdmitEdge · Admissions Admin Control</title>
+  <!-- Tailwind + Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* --- Root Color Engine (AdmitEdge Theme) --- */
+    :root, html[data-theme='light'] {
+      --bg-body: #F8FAFC;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --accent: #2563EB;
+      --accent-dark: #1D4ED8;
+      --accent-light: #EFF6FF;
+      --gold: #F59E0B;
+      --primary: #1E3A8A;
+      --card-bg: #FFFFFF;
+      --border-light: #E2E8F0;
+      --hover-bg: #F1F5F9;
+      --footer-bg: #0F172A;
+      --footer-text: #E2E8F0;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --info: #3B82F6;
+      --sidebar-bg: #FFFFFF;
+    }
+    html[data-theme='dark'] {
+      color-scheme: dark;
+      --bg-body: #0A0F1D;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --accent: #3B82F6;
+      --accent-dark: #2563EB;
+      --accent-light: #1E293B;
+      --gold: #FBBF24;
+      --primary: #1E40AF;
+      --card-bg: #131D31;
+      --border-light: #1E293B;
+      --hover-bg: #1B2942;
+      --footer-bg: #070B14;
+      --footer-text: #CBD5E1;
+      --success: #059669;
+      --warning: #D97706;
+      --danger: #DC2626;
+      --info: #2563EB;
+      --sidebar-bg: #0A0F1D;
+    }
+
+    body {
+      background: var(--bg-body);
+      color: var(--text-primary);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      transition: background-color 0.25s ease, color 0.2s;
+      overflow-x: hidden;
+      width: 100%;
+    }
+    * { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, h5, h6 { font-weight: 600 !important; }
+    p:not(.font-medium), div.text-secondary { font-weight: 400 !important; }
+
+    .text-accent { color: var(--accent); }
+    .bg-accent { background-color: var(--accent); }
+    .border-accent { border-color: var(--accent); }
+    .bg-card { background-color: var(--card-bg); }
+    .text-secondary { color: var(--text-secondary); }
+    .border-border { border-color: var(--border-light); }
+    .bg-hover { background-color: var(--hover-bg); }
+    .text-primary-text { color: var(--text-primary); }
+    .bg-body { background-color: var(--bg-body); }
+    .bg-sidebar { background-color: var(--sidebar-bg); }
+    .text-success { color: var(--success); }
+    .text-warning { color: var(--warning); }
+    .text-danger { color: var(--danger); }
+    .text-info { color: var(--info); }
+    .bg-success { background-color: var(--success); }
+    .bg-warning { background-color: var(--warning); }
+    .bg-danger { background-color: var(--danger); }
+    .bg-info { background-color: var(--info); }
+    .text-gold { color: var(--gold); }
+
+    .dashboard-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 1.25rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 18px -8px rgba(0,0,0,0.04);
+      height: auto;
+    }
+    .dashboard-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 16px 24px -12px rgba(37,99,235,0.15);
+    }
+    .status-pulse {
+      width: 10px; height: 10px;
+      background-color: var(--success);
+      border-radius: 9999px;
+      box-shadow: 0 0 0 0 rgba(16,185,129,0.5);
+      animation: pulse2 2s infinite;
+    }
+    @keyframes pulse2 { 70% { box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
+
+    .sidebar-link {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
+      color: var(--text-secondary);
+      transition: all 0.18s ease;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+    .sidebar-link:hover, .sidebar-link.active {
+      background: var(--accent);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .sidebar-link:hover i, .sidebar-link.active i { color: white; }
+    .sidebar-link.logout:hover { background: #d13b3b; color: white; }
+
+    html[dir="rtl"] .sidebar-link { flex-direction: row-reverse; }
+    html[dir="rtl"] .ml-auto { margin-right: auto; margin-left: 0; }
+
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s cubic-bezier(0.2,0.9,0.3,1), transform 0.6s cubic-bezier(0.2,0.9,0.3,1); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+    .admin-section { display: block; }
+    .bg-accent-gradient { background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white !important;
+      border-radius: 9999px;
+      transition: 0.2s;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      font-weight: 600;
+    }
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+    }
+    .btn-outline {
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      border-radius: 9999px;
+      background: transparent;
+      transition: 0.2s;
+      font-weight: 600;
+    }
+    .btn-outline:hover {
+      background: var(--accent);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar { height: 4px; width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+
+    #mobile-overlay {
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      position: fixed; inset: 0; z-index: 55;
+    }
+    #mobile-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .chart-bar {
+      height: 8px; border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent), #3B82F6);
+      transition: width 0.3s ease;
+    }
+    .progress-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent), #3B82F6);
+      transition: width 0.3s ease;
+    }
+    .status-badge {
+      padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.7rem;
+      font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .status-badge.active { background-color: var(--success); color: white; }
+    .status-badge.pending { background-color: var(--warning); color: white; }
+    .status-badge.cancelled { background-color: var(--danger); color: white; }
+    .status-badge.completed { background-color: var(--info); color: white; }
+    .status-badge.review { background-color: var(--accent); color: white; }
+          /* Call/Phone icon facing opposite direction site-wide */
+        .fa-phone, .fa-phone-alt, .fa-phone-flip, .fa-phone-volume {
+            transform: scaleX(-1);
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="antialiased h-screen overflow-hidden w-full">
+
+  <!-- TOP BAR -->
+  <header class="border-b border-border bg-card sticky top-0 z-50 w-full">
+    <div class="max-w-[1920px] mx-auto px-2 sm:px-6 lg:px-10 py-2.5 sm:py-3 flex items-center justify-between gap-1 sm:gap-3">
+      <!-- Hamburger + Brand -->
+      <div class="flex items-center gap-1.5 sm:gap-3 min-w-0">
+        <button id="mobile-menu-toggle" class="xl:hidden p-1.5 sm:p-2 -ml-1 sm:-ml-2 rounded-xl hover:bg-hover transition text-primary-text shrink-0">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <div class="flex items-center gap-2 shrink-0">
+          <a href="index.html" class="flex items-center gap-1.5 sm:gap-2 shrink-0 group">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+            </div>
+            <div class="leading-tight">
+              <span class="block text-base sm:text-xl font-bold tracking-tight text-primary-text leading-tight">Admit<span class="text-accent">Edge</span></span>
+              <span class="hidden xs:block text-[8.5px] sm:text-[10px] font-semibold uppercase tracking-wider text-secondary leading-tight">Admin Center</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <!-- Admin Utilities -->
+      <div class="flex items-center gap-1 sm:gap-2.5 lg:gap-3 shrink-0 rtl:flex-row-reverse min-w-0">
+        <!-- Search bar: hidden on mobile/tablet to prevent header cut off, visible on xl screens -->
+        <div class="hidden xl:flex items-center bg-hover rounded-full px-3.5 py-1.5 border border-border w-48 overflow-hidden">
+          <i class="fas fa-search text-secondary text-xs mr-2"></i>
+          <input type="text" placeholder="Search students..." class="bg-transparent border-none outline-none text-xs w-full text-primary-text placeholder-secondary/50">
+        </div>
+        <button id="lang-toggle" class="p-1.5 sm:p-2 rounded-full hover:bg-hover transition text-primary-text text-xs sm:text-sm" title="Toggle Language / RTL"><i class="fas fa-exchange-alt"></i></button>
+        <button id="theme-toggle-user" class="p-1.5 sm:p-2 rounded-full hover:bg-hover transition text-primary-text text-xs sm:text-sm" title="Toggle Theme"><i class="fas fa-moon"></i></button>
+        <div class="relative">
+          <button class="p-1.5 sm:p-2 rounded-full hover:bg-hover transition text-primary-text text-xs sm:text-sm relative" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full"></span>
+          </button>
+        </div>
+        <div class="relative flex items-center gap-1.5 sm:gap-2 pl-2 sm:pl-3 border-l border-border rtl:border-l-0 rtl:border-r min-w-0 shrink-0">
+          <div class="relative flex-shrink-0">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-accent/10 border border-accent flex items-center justify-center text-accent font-semibold text-xs sm:text-sm">
+              <i class="fas fa-user-shield text-[11px] sm:text-xs"></i>
+            </div>
+            <span class="absolute bottom-0 right-0 status-pulse"></span>
+          </div>
+          <div class="hidden sm:block text-left min-w-0">
+            <p class="font-semibold text-xs sm:text-sm leading-none truncate max-w-[85px] md:max-w-[110px] lg:max-w-none">Dean Sterling</p>
+            <p class="text-[9px] sm:text-[10px] text-secondary mt-0.5 uppercase tracking-wider font-semibold truncate hidden lg:block">Admissions Director</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE OVERLAY -->
+  <div id="mobile-overlay" class="xl:hidden"></div>
+
+  <!-- MAIN LAYOUT -->
+  <main class="max-w-[1920px] mx-auto px-2.5 sm:px-6 lg:px-10 py-3 sm:py-6 h-[calc(100vh-56px)] sm:h-[calc(100vh-64px)] w-full relative">
+    <div class="flex flex-col xl:flex-row gap-4 xl:gap-6 xl:gap-10 h-full">
+
+      <!-- SIDEBAR -->
+      <aside id="sidebar-container" class="fixed xl:static top-0 left-0 rtl:right-0 rtl:left-auto h-full xl:h-auto w-72 xl:w-80 z-[60] xl:z-10 transform -translate-x-full rtl:translate-x-full xl:translate-x-0 xl:rtl:translate-x-0 transition-transform duration-300 ease-in-out bg-sidebar xl:bg-transparent flex-shrink-0">
+        <div class="dashboard-card p-5 bg-sidebar h-full overflow-y-auto custom-scrollbar border-r xl:border border-border xl:rounded-[1.25rem] rounded-none shadow-none xl:shadow-md">
+          <!-- Mobile header -->
+          <div class="flex xl:hidden justify-between items-center mb-6 px-2">
+            <div class="flex items-center gap-2 text-accent"><i class="fas fa-bars-staggered"></i><span class="text-xs font-medium uppercase tracking-widest">Menu</span></div>
+            <button id="close-sidebar" class="p-2 hover:bg-hover rounded-lg text-primary-text"><i class="fas fa-times"></i></button>
+          </div>
+          <!-- Mobile profile -->
+          <div class="flex xl:hidden items-center gap-3 mb-6 px-2 pb-6 border-b border-border">
+            <div class="relative flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-accent/10 border border-accent flex items-center justify-center text-accent font-semibold"><i class="fas fa-user-shield text-sm"></i></div>
+              <span class="absolute bottom-0 right-0 status-pulse"></span>
+            </div>
+            <div><p class="font-semibold text-primary-text leading-tight">Dean Sterling</p><p class="text-[10px] text-secondary mt-0.5 uppercase tracking-widest font-medium">Admissions Director</p></div>
+          </div>
+
+          <nav class="flex flex-col gap-1">
+            <p class="text-[10px] uppercase tracking-widest text-secondary font-medium mt-2 mb-2 px-2">Operations</p>
+            <a href="#" onclick="activateSection('overview')" data-section="overview" class="sidebar-link active"><i class="fas fa-chart-pie w-5"></i><span>Overview & KPIs</span></a>
+            <a href="#" onclick="activateSection('students')" data-section="students" class="sidebar-link"><i class="fas fa-user-graduate w-5"></i><span>Student Pipeline</span></a>
+            <a href="#" onclick="activateSection('essays')" data-section="essays" class="sidebar-link"><i class="fas fa-file-signature w-5"></i><span>Essay Review Queue</span></a>
+            <a href="#" onclick="activateSection('interviews')" data-section="interviews" class="sidebar-link"><i class="fas fa-video w-5"></i><span>Interview Schedule</span></a>
+            <p class="text-[10px] uppercase tracking-widest text-secondary font-medium mt-4 mb-2 px-2">Counselors</p>
+            <a href="#" onclick="activateSection('counselors')" data-section="counselors" class="sidebar-link"><i class="fas fa-user-tie w-5"></i><span>Counselor Caseloads</span></a>
+            <a href="#" onclick="activateSection('workload')" data-section="workload" class="sidebar-link"><i class="fas fa-tasks w-5"></i><span>Workload Balance</span></a>
+            <p class="text-[10px] uppercase tracking-widest text-secondary font-medium mt-4 mb-2 px-2">System</p>
+            <a href="#" onclick="activateSection('reports')" data-section="reports" class="sidebar-link"><i class="fas fa-chart-line w-5"></i><span>Admissions Reports</span></a>
+            <a href="#" onclick="activateSection('settings')" data-section="settings" class="sidebar-link"><i class="fas fa-sliders w-5"></i><span>Platform Settings</span></a>
+            <a href="#" onclick="activateSection('logout')" data-section="logout" class="sidebar-link logout mt-2 text-red-500"><i class="fas fa-power-off w-5"></i><span>Logout</span></a>
+          </nav>
+
+          <div class="mt-8 pt-4 border-t border-border text-[11px] text-secondary">
+            <div class="flex justify-between"><span>Active students</span><span class="font-semibold text-success">128</span></div>
+            <div class="flex justify-between mt-1.5"><span>Essays in review</span><span class="font-medium text-warning">24</span></div>
+            <div class="flex justify-between mt-1.5"><span>Counselors online</span><span class="font-medium text-accent">6</span></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CONTENT AREA -->
+      <div class="flex-1 min-w-0 overflow-y-auto custom-scrollbar pr-0 sm:pr-2">
+
+        <!-- OVERVIEW / DASHBOARD -->
+        <div id="overview" class="admin-section">
+          <div class="dashboard-card p-4 sm:p-6 lg:p-7 reveal active mb-4 sm:mb-6 bg-accent-gradient text-white">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center items-start gap-3 sm:gap-4">
+              <div>
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-semibold mb-1.5 sm:mb-2 leading-tight">🎓 Admissions Overview, Dean Sterling</h2>
+                <p class="text-white/90 text-xs sm:text-sm leading-relaxed">Real-time student pipeline, essay review queue, and counselor caseload tracking.</p>
+              </div>
+              <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full sm:w-auto shrink-0">
+                <span class="bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Today · Apr 09, 2026</span>
+                <span class="bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5"><i class="fas fa-circle text-emerald-300 text-[6px]"></i> All Systems Go</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-6 mb-4 sm:mb-6">
+            <div class="dashboard-card p-4 sm:p-6 reveal">
+              <div class="flex justify-between items-start gap-4">
+                <div><p class="text-secondary text-xs uppercase tracking-wider font-medium">Active Students</p><p class="text-3xl font-bold mt-2">128</p><p class="text-success text-xs font-medium mt-2 flex items-center gap-1"><i class="fas fa-arrow-up"></i> +14 this cycle</p></div>
+                <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0"><i class="fas fa-user-graduate text-accent text-xl"></i></div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-border flex gap-4 text-xs"><span><span class="font-semibold">82</span> <span class="text-secondary">seniors</span></span><span><span class="font-semibold">46</span> <span class="text-secondary">juniors</span></span></div>
+            </div>
+            <div class="dashboard-card p-4 sm:p-6 reveal">
+              <div class="flex justify-between items-start gap-4">
+                <div><p class="text-secondary text-xs uppercase tracking-wider font-medium">Essays in Review</p><p class="text-3xl font-bold mt-2">24</p><p class="text-warning text-xs font-medium mt-2 flex items-center gap-1"><i class="fas fa-clock"></i> 8 due within 24 hrs</p></div>
+                <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0"><i class="fas fa-file-signature text-accent text-xl"></i></div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-border flex gap-4 text-xs"><span><span class="font-semibold">16</span> <span class="text-secondary">in progress</span></span><span><span class="font-semibold">8</span> <span class="text-secondary">final review</span></span></div>
+            </div>
+            <div class="dashboard-card p-4 sm:p-6 reveal">
+              <div class="flex justify-between items-start gap-4">
+                <div><p class="text-secondary text-xs uppercase tracking-wider font-medium">Upcoming Interviews</p><p class="text-3xl font-bold mt-2">19</p><p class="text-info text-xs font-medium mt-2 flex items-center gap-1"><i class="fas fa-video"></i> 5 scheduled today</p></div>
+                <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0"><i class="fas fa-video text-accent text-xl"></i></div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-border flex gap-4 text-xs"><span><span class="font-semibold">12</span> <span class="text-secondary">mock calls</span></span><span><span class="font-semibold">7</span> <span class="text-secondary">alumni</span></span></div>
+            </div>
+            <div class="dashboard-card p-4 sm:p-6 reveal">
+              <div class="flex justify-between items-start gap-4">
+                <div><p class="text-secondary text-xs uppercase tracking-wider font-medium">Admit Rate Target</p><p class="text-3xl font-bold mt-2">98.2%</p><p class="text-success text-xs font-medium mt-2 flex items-center gap-1"><i class="fas fa-check-circle"></i> Top 3 choice</p></div>
+                <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0"><i class="fas fa-trophy text-accent text-xl"></i></div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-border flex gap-4 text-xs"><span><span class="font-semibold">1,850+</span> <span class="text-secondary">students served</span></span></div>
+            </div>
+          </div>
+
+          <!-- Pipeline chart + quick action -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div class="dashboard-card p-6 lg:col-span-2 reveal">
+              <div class="flex justify-between items-center mb-6"><h3 class="font-semibold text-lg">Student Pipeline · Class of 2026/27</h3><select class="bg-hover border border-border rounded-full px-4 py-2 text-xs font-medium uppercase"><option>All grades</option><option>Seniors</option><option>Juniors</option><option>Sophomores</option></select></div>
+              <div class="h-64 flex items-end justify-between gap-2">
+                <div class="flex-1 flex flex-col items-center gap-2"><div class="w-full chart-bar" style="height: 40px; width: 60%;"></div><span class="text-xs text-secondary">Profile</span></div>
+                <div class="flex-1 flex flex-col items-center gap-2"><div class="w-full chart-bar" style="height: 65px; width: 80%;"></div><span class="text-xs text-secondary">Essays</span></div>
+                <div class="flex-1 flex flex-col items-center gap-2"><div class="w-full chart-bar" style="height: 90px; width: 95%;"></div><span class="text-xs text-secondary">Review</span></div>
+                <div class="flex-1 flex flex-col items-center gap-2"><div class="w-full chart-bar" style="height: 75px; width: 85%;"></div><span class="text-xs text-secondary">Interview</span></div>
+                <div class="flex-1 flex flex-col items-center gap-2"><div class="w-full chart-bar" style="height: 55px; width: 70%;"></div><span class="text-xs text-secondary">Submit</span></div>
+                <div class="flex-1 flex flex-col items-center gap-2"><div class="w-full chart-bar" style="height: 30px; width: 50%;"></div><span class="text-xs text-secondary">Decision</span></div>
+                <div class="flex-1 flex flex-col items-center gap-2"><div class="w-full chart-bar" style="height: 20px; width: 40%;"></div><span class="text-xs text-secondary">Enrolled</span></div>
+              </div>
+              <div class="mt-6 pt-4 border-t border-border flex justify-between"><span class="text-secondary text-sm">On-track completion rate</span><span class="font-semibold text-xl text-accent">92%</span></div>
+            </div>
+            <div class="dashboard-card p-4 sm:p-6 reveal">
+              <h3 class="font-semibold text-lg mb-4">Quick Actions</h3>
+              <div class="space-y-3">
+                <button class="w-full py-3 btn-primary text-sm font-semibold"><i class="fas fa-user-plus mr-2"></i> Onboard New Student</button>
+                <button class="w-full py-3 border border-border rounded-xl text-sm font-medium hover:bg-hover"><i class="fas fa-file-signature mr-2"></i> Review Essay Queue</button>
+                <button class="w-full py-3 border border-border rounded-xl text-sm font-medium hover:bg-hover"><i class="fas fa-calendar-plus mr-2"></i> Schedule Mock Interview</button>
+              </div>
+              <div class="mt-6 pt-4 border-t border-border text-xs text-secondary"><span class="block">💡 Tip: 8 essays are due within 24 hours — assign reviewers now.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STUDENT PIPELINE -->
+        <div id="students" class="admin-section hidden">
+          <div class="dashboard-card p-4 sm:p-7 reveal active">
+            <div class="flex flex-row justify-between items-center gap-3 mb-6">
+              <h2 class="text-lg sm:text-2xl font-semibold text-primary-text flex items-center gap-2"><span class="text-accent">👥</span> Student Pipeline</h2>
+              <div class="flex gap-2"><button class="px-3.5 sm:px-6 py-2 sm:py-3 btn-primary text-xs font-semibold uppercase tracking-widest"><i class="fas fa-filter mr-1"></i> Filter</button></div>
+            </div>
+            <div class="space-y-3.5 sm:space-y-4">
+              <!-- Student 1 -->
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-start sm:items-center gap-3 min-w-0">
+                  <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+                    <i class="fas fa-user-graduate text-accent text-lg sm:text-xl"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center justify-between sm:block gap-2">
+                      <p class="font-semibold text-sm sm:text-base truncate">Maya Lin · Class of 2027</p>
+                      <span class="sm:hidden status-badge review shrink-0 whitespace-nowrap">On Track</span>
+                    </div>
+                    <p class="text-xs text-secondary mt-0.5 sm:mt-1 break-words sm:truncate">Top Choice: Stanford (REA) · Counselor: Dr. Julian Vance</p>
+                    <div class="flex flex-wrap gap-2.5 sm:gap-3 mt-1.5 text-xs text-secondary">
+                      <span class="inline-flex items-center gap-1"><i class="far fa-check-circle text-success"></i> Essays 80%</span>
+                      <span class="inline-flex items-center gap-1"><i class="fas fa-video"></i> Mock prep</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="hidden sm:block shrink-0"><span class="status-badge review whitespace-nowrap">On Track</span></div>
+              </div>
+
+              <!-- Student 2 -->
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-start sm:items-center gap-3 min-w-0">
+                  <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+                    <i class="fas fa-user-graduate text-accent text-lg sm:text-xl"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center justify-between sm:block gap-2">
+                      <p class="font-semibold text-sm sm:text-base truncate">David Zhang · Class of 2027</p>
+                      <span class="sm:hidden status-badge pending shrink-0 whitespace-nowrap">In Progress</span>
+                    </div>
+                    <p class="text-xs text-secondary mt-0.5 sm:mt-1 break-words sm:truncate">Top Choice: MIT (EA) · Counselor: Marcus Sterling</p>
+                    <div class="flex flex-wrap gap-2.5 sm:gap-3 mt-1.5 text-xs text-secondary">
+                      <span class="inline-flex items-center gap-1"><i class="fas fa-clock text-warning"></i> Interview prep</span>
+                      <span class="inline-flex items-center gap-1"><i class="fas fa-file-signature"></i> Supplements</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="hidden sm:block shrink-0"><span class="status-badge pending whitespace-nowrap">In Progress</span></div>
+              </div>
+
+              <!-- Student 3 -->
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-start sm:items-center gap-3 min-w-0">
+                  <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+                    <i class="fas fa-user-graduate text-accent text-lg sm:text-xl"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center justify-between sm:block gap-2">
+                      <p class="font-semibold text-sm sm:text-base truncate">Aria Sharma · Class of 2027</p>
+                      <span class="sm:hidden status-badge review shrink-0 whitespace-nowrap">Reviewing</span>
+                    </div>
+                    <p class="text-xs text-secondary mt-0.5 sm:mt-1 break-words sm:truncate">Top Choice: Columbia (ED) · Counselor: Elena Rostova</p>
+                    <div class="flex flex-wrap gap-2.5 sm:gap-3 mt-1.5 text-xs text-secondary">
+                      <span class="inline-flex items-center gap-1"><i class="fas fa-file-signature text-warning"></i> Supplements (2)</span>
+                      <span class="inline-flex items-center gap-1"><i class="fas fa-user-tie"></i> Strategy call</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="hidden sm:block shrink-0"><span class="status-badge review whitespace-nowrap">Reviewing</span></div>
+              </div>
+            </div>
+            <div class="mt-5 p-3.5 sm:p-4 bg-hover rounded-2xl text-xs sm:text-sm"><i class="fas fa-info-circle text-accent mr-1.5"></i> Student health is based on checklist completion, essay status, and counselor engagement.</div>
+          </div>
+        </div>
+
+        <!-- ESSAY REVIEW QUEUE -->
+        <div id="essays" class="admin-section hidden">
+          <div class="dashboard-card p-5 sm:p-7 reveal active">
+            <h2 class="text-xl sm:text-2xl font-semibold text-primary-text mb-8 flex items-center gap-2"><span class="text-accent">📝</span> Essay Review Queue</h2>
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+              <div class="p-6 bg-hover rounded-2xl"><h3 class="font-bold text-lg text-accent mb-2">Drafts in Queue</h3><p class="text-3xl font-bold">24</p><p class="text-xs text-warning mt-1">8 due within 24 hrs</p></div>
+              <div class="p-6 bg-hover rounded-2xl"><h3 class="font-bold text-lg text-accent mb-2">Avg. Turnaround</h3><p class="text-3xl font-bold">38 hrs</p><p class="text-xs text-success mt-1">Within 48h guarantee</p></div>
+              <div class="p-6 bg-hover rounded-2xl"><h3 class="font-bold text-lg text-accent mb-2">Reviewed This Week</h3><p class="text-3xl font-bold">62</p><p class="text-xs text-secondary mt-1">across 128 students</p></div>
+            </div>
+            <div class="space-y-3 sm:space-y-4">
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex flex-col gap-1.5">
+                <div class="flex items-start justify-between gap-2">
+                  <p class="font-semibold text-sm sm:text-base leading-snug">Maya Lin · Common App Personal Statement</p>
+                  <span class="status-badge pending whitespace-nowrap shrink-0">In Review</span>
+                </div>
+                <p class="text-xs text-secondary">Draft v4 · Assigned to Dr. Julian Vance</p>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex flex-col gap-1.5">
+                <div class="flex items-start justify-between gap-2">
+                  <p class="font-semibold text-sm sm:text-base leading-snug">David Zhang · Stanford Supplemental Essays (3/4)</p>
+                  <span class="status-badge pending whitespace-nowrap shrink-0">In Review</span>
+                </div>
+                <p class="text-xs text-secondary">Draft v2 · Assigned to Marcus Sterling</p>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex flex-col gap-1.5">
+                <div class="flex items-start justify-between gap-2">
+                  <p class="font-semibold text-sm sm:text-base leading-snug">Aria Sharma · Columbia Why Major Essay</p>
+                  <span class="status-badge review whitespace-nowrap shrink-0">Ready</span>
+                </div>
+                <p class="text-xs text-secondary">Draft v1 · Assigned to Elena Rostova</p>
+              </div>
+            </div>
+            <div class="mt-6 p-4 bg-hover rounded-2xl text-sm"><i class="fas fa-info-circle text-accent mr-2"></i> All essays require senior counselor sign-off before student delivery.</div>
+          </div>
+        </div>
+
+        <!-- INTERVIEW SCHEDULE -->
+        <div id="interviews" class="admin-section hidden">
+          <div class="dashboard-card p-4 sm:p-6 lg:p-7 reveal active">
+            <h2 class="text-lg sm:text-2xl font-semibold text-primary-text mb-4 sm:mb-6 flex items-center gap-2"><span class="text-accent">🎤</span> Interview Schedule</h2>
+            <div class="space-y-3 sm:space-y-4">
+              <!-- Item 1 -->
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex flex-col gap-2">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-sm sm:text-base leading-snug">Maya Lin · MIT Mock Interview</p>
+                    <p class="text-xs text-secondary mt-0.5">Tomorrow · 5:30 PM EST · with Sarah Jenkins</p>
+                  </div>
+                  <span class="status-badge active whitespace-nowrap shrink-0">Confirmed</span>
+                </div>
+                <div class="flex items-center gap-4 pt-2 border-t border-border/50 text-xs text-secondary">
+                  <span class="inline-flex items-center gap-1.5"><i class="fas fa-video text-accent"></i> Zoom</span>
+                  <span class="inline-flex items-center gap-1.5"><i class="fas fa-user-check text-emerald-500"></i> Confirmed</span>
+                </div>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex flex-col gap-2">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-sm sm:text-base leading-snug">David Zhang · Stanford Alumni Interview Prep</p>
+                    <p class="text-xs text-secondary mt-0.5">Apr 11, 2026 · 3:00 PM EST · with Marcus Sterling</p>
+                  </div>
+                  <span class="status-badge pending whitespace-nowrap shrink-0">Pending</span>
+                </div>
+                <div class="flex items-center gap-4 pt-2 border-t border-border/50 text-xs text-secondary">
+                  <span class="inline-flex items-center gap-1.5"><i class="fas fa-video text-accent"></i> Zoom</span>
+                  <span class="inline-flex items-center gap-1.5"><i class="fas fa-clock text-amber-500"></i> Pending</span>
+                </div>
+              </div>
+
+              <!-- Item 3 -->
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex flex-col gap-2">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-sm sm:text-base leading-snug">Aria Sharma · Columbia Interview Prep</p>
+                    <p class="text-xs text-secondary mt-0.5">Apr 12, 2026 · 11:00 AM EST · with Elena Rostova</p>
+                  </div>
+                  <span class="status-badge active whitespace-nowrap shrink-0">Confirmed</span>
+                </div>
+                <div class="flex items-center gap-4 pt-2 border-t border-border/50 text-xs text-secondary">
+                  <span class="inline-flex items-center gap-1.5"><i class="fas fa-video text-accent"></i> Zoom</span>
+                  <span class="inline-flex items-center gap-1.5"><i class="fas fa-user-check text-emerald-500"></i> Confirmed</span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 p-4 bg-hover rounded-2xl text-sm"><i class="fas fa-info-circle text-accent mr-2"></i> All mock interviews are recorded for student review unless explicitly opted out.</div>
+          </div>
+        </div>
+
+        <!-- COUNSELOR CASELOADS -->
+        <div id="counselors" class="admin-section hidden">
+          <div class="dashboard-card p-5 sm:p-7 reveal active">
+            <h2 class="text-xl sm:text-2xl font-semibold text-primary-text mb-8 flex items-center gap-2"><span class="text-accent">🧑‍🏫</span> Counselor Caseloads</h2>
+            <div class="space-y-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-2xl"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent"><i class="fas fa-user-tie"></i></div><div><p class="font-semibold">Dr. Julian Vance · Former Yale AO</p><p class="text-xs text-secondary">11 of 12 students assigned</p></div></div><span class="status-badge pending whitespace-nowrap shrink-0 self-start sm:self-auto">Near Capacity</span></div>
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-2xl"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent"><i class="fas fa-user-tie"></i></div><div><p class="font-semibold">Marcus Sterling · Former MIT AO</p><p class="text-xs text-secondary">10 of 12 students assigned</p></div></div><span class="status-badge active whitespace-nowrap shrink-0 self-start sm:self-auto">Available</span></div>
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-2xl"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent"><i class="fas fa-user-tie"></i></div><div><p class="font-semibold">Elena Rostova · Former Columbia AO</p><p class="text-xs text-secondary">9 of 12 students assigned</p></div></div><span class="status-badge active whitespace-nowrap shrink-0 self-start sm:self-auto">Available</span></div>
+            </div>
+            <div class="mt-6 p-4 bg-hover rounded-2xl text-sm"><i class="fas fa-info-circle text-accent mr-2"></i> Counselor capacity is capped at 12 students per admissions cycle to preserve quality.</div>
+          </div>
+        </div>
+
+        <!-- WORKLOAD BALANCE -->
+        <div id="workload" class="admin-section hidden">
+          <div class="dashboard-card p-5 sm:p-7 reveal active">
+            <h2 class="text-xl sm:text-2xl font-semibold text-primary-text mb-8 flex items-center gap-2"><span class="text-accent">⚖️</span> Workload Balance</h2>
+            <div class="space-y-5">
+              <div><div class="flex justify-between text-sm mb-1"><span class="font-medium">Dr. Julian Vance</span><span class="font-semibold text-warning">11/12 students</span></div><div class="progress-bar" style="width: 92%;"></div></div>
+              <div><div class="flex justify-between text-sm mb-1"><span class="font-medium">Marcus Sterling</span><span class="font-semibold text-accent">10/12 students</span></div><div class="progress-bar" style="width: 83%;"></div></div>
+              <div><div class="flex justify-between text-sm mb-1"><span class="font-medium">Elena Rostova</span><span class="font-semibold text-success">9/12 students</span></div><div class="progress-bar" style="width: 75%;"></div></div>
+            </div>
+            <div class="mt-6 p-4 bg-hover rounded-2xl text-sm"><i class="fas fa-info-circle text-accent mr-2"></i> Use workload data to rebalance caseloads before the next admissions round.</div>
+          </div>
+        </div>
+
+        <!-- ADMISSIONS REPORTS -->
+        <div id="reports" class="admin-section hidden">
+          <div class="dashboard-card p-5 sm:p-7 reveal active">
+            <h2 class="text-xl sm:text-2xl font-semibold text-primary-text mb-8 flex items-center gap-2"><span class="text-accent">📊</span> Admissions Reports</h2>
+            <div class="space-y-4">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-2xl"><div><p class="font-semibold">Class of 2026 · Early Action Outcomes</p><p class="text-xs text-secondary">Generated Apr 05, 2026 · 128 students</p><p class="text-xs text-accent mt-1"><i class="fas fa-check-circle"></i> Ready for download</p></div><button class="text-accent"><i class="fas fa-download"></i></button></div>
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-2xl"><div><p class="font-semibold">Counselor Caseload & Utilization Report</p><p class="text-xs text-secondary">Generated Apr 03, 2026 · 6 counselors</p><p class="text-xs text-accent mt-1"><i class="fas fa-check-circle"></i> Ready for download</p></div><button class="text-accent"><i class="fas fa-download"></i></button></div>
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-2xl"><div><p class="font-semibold">Essay Turnaround & Quality Metrics</p><p class="text-xs text-secondary">Live · updated hourly</p><p class="text-xs text-warning mt-1"><i class="fas fa-clock"></i> In progress</p></div><button class="text-secondary cursor-not-allowed"><i class="fas fa-download"></i></button></div>
+            </div>
+            <div class="mt-6 p-4 bg-hover rounded-2xl text-sm"><i class="fas fa-info-circle text-accent mr-2"></i> Reports are archived for 12 months. Export to CSV or PDF for board reporting.</div>
+          </div>
+        </div>
+
+        <!-- PLATFORM SETTINGS -->
+        <div id="settings" class="admin-section hidden">
+          <div class="dashboard-card p-5 sm:p-7 reveal active">
+            <h2 class="text-xl sm:text-2xl font-semibold text-primary-text mb-8 flex items-center gap-2"><span class="text-accent">⚙️</span> Platform Settings</h2>
+            <div class="space-y-6">
+              <div>
+                <h3 class="font-semibold text-lg mb-4 pb-2 border-b border-border">Admissions Workflow</h3>
+                <div class="space-y-3">
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-xl"><div><p class="font-semibold">Auto-assign essays to counselors</p><p class="text-xs text-secondary">Route new drafts based on caseload</p></div><div class="w-12 h-6 bg-accent rounded-full p-1 cursor-pointer"><span class="block w-4 h-4 bg-white rounded-full ml-auto"></span></div></div>
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-xl"><div><p class="font-semibold">Require senior sign-off on essays</p><p class="text-xs text-secondary">All essays must be reviewed before delivery</p></div><div class="w-12 h-6 bg-accent rounded-full p-1 cursor-pointer"><span class="block w-4 h-4 bg-white rounded-full ml-auto"></span></div></div>
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-xl"><div><p class="font-semibold">Essay turnaround guarantee</p><p class="text-xs text-secondary">Flag drafts older than</p></div><select class="bg-card border border-border rounded-lg px-3 py-1.5 text-xs"><option>24 hours</option><option selected>48 hours</option><option>72 hours</option></select></div>
+                </div>
+              </div>
+              <div>
+                <h3 class="font-semibold text-lg mb-4 pb-2 border-b border-border">Counselor Capacity</h3>
+                <div class="space-y-3">
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-xl"><div><p class="font-semibold">Max students per counselor</p><p class="text-xs text-secondary">Caseload cap per admissions cycle</p></div><select class="bg-card border border-border rounded-lg px-3 py-1.5 text-xs"><option>10</option><option selected>12</option><option>15</option></select></div>
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-xl"><div><p class="font-semibold">Enable mock interview recording</p><p class="text-xs text-secondary">Record Zoom sessions for student review</p></div><div class="w-12 h-6 bg-accent rounded-full p-1 cursor-pointer"><span class="block w-4 h-4 bg-white rounded-full ml-auto"></span></div></div>
+                </div>
+              </div>
+              <div class="pt-4 flex gap-4"><button class="btn-primary px-8 py-3 text-xs font-semibold uppercase tracking-widest">Save Changes</button><button class="border border-border px-8 py-3 rounded-full text-xs font-semibold uppercase tracking-widest hover:bg-hover">Cancel</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOGOUT -->
+        <div id="logout" class="admin-section hidden">
+          <div class="dashboard-card p-10 reveal active text-center max-w-lg mx-auto border-red-500/20">
+            <div class="w-20 h-20 mx-auto bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center text-red-500 text-3xl mb-6"><i class="fas fa-door-open"></i></div>
+            <h2 class="text-2xl font-semibold text-primary-text">Logout?</h2>
+            <p class="text-secondary mt-3 text-sm">You will be redirected to the admin login page.</p>
+            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="login.html"><button class="bg-red-500 hover:bg-red-600 text-white font-semibold uppercase tracking-widest px-8 py-3 rounded-full text-[10px] transition shadow-lg">Logout</button></a>
+              <button onclick="activateSection('overview')" class="bg-hover border border-border px-8 py-3 rounded-full text-[10px] font-semibold uppercase tracking-widest transition">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SYSTEM STATUS / FOOTER -->
+        <div class="bg-accent-gradient rounded-3xl p-6 sm:p-8 mt-10 text-white reveal flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+          <div class="flex items-center gap-4 text-center sm:text-left"><span class="w-3 h-3 bg-white rounded-full animate-ping flex-shrink-0"></span><div><p class="font-semibold text-lg tracking-tighter uppercase">AdmitEdge Admin Online</p><p class="text-xs text-white/70 italic">Secure admissions management · real-time student pipeline</p></div></div>
+          <div class="flex items-center gap-3"><span class="bg-white/20 backdrop-blur-md px-6 py-2.5 rounded-full text-[10px] font-semibold uppercase tracking-widest">128 active students</span></div>
+        </div>
+        <footer class="mt-12 text-center text-[10px] text-secondary border-t border-border pt-8 pb-12 w-full">
+          <p class="uppercase tracking-[0.3em] font-semibold opacity-40">© 2026 AdmitEdge Admissions Counseling. All rights reserved.</p>
+          <div class="flex justify-center gap-8 mt-4 font-semibold uppercase opacity-60"><span class="hover:text-accent cursor-pointer transition">Privacy Policy</span><span class="hover:text-accent cursor-pointer transition">Terms of Service</span><span class="hover:text-accent cursor-pointer transition">FERPA & Student Privacy</span></div>
+        </footer>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      'use strict';
+      const htmlEl = document.documentElement;
+
+      // ----- 1. MOBILE MENU -----
+      const menuToggle = document.getElementById('mobile-menu-toggle');
+      const closeSidebar = document.getElementById('close-sidebar');
+      const sidebar = document.getElementById('sidebar-container');
+      const overlay = document.getElementById('mobile-overlay');
+      function toggleMobileMenu(isOpen) {
+        if (isOpen) { sidebar.classList.remove('-translate-x-full'); overlay.classList.add('active'); document.body.classList.toggle('overflow-hidden', isOpen); }
+        else { sidebar.classList.add('-translate-x-full'); overlay.classList.remove('active'); document.body.style.overflow = ''; }
+      }
+      if (menuToggle) menuToggle.addEventListener('click', () => toggleMobileMenu(true));
+      if (closeSidebar) closeSidebar.addEventListener('click', () => toggleMobileMenu(false));
+      if (overlay) overlay.addEventListener('click', () => toggleMobileMenu(false));
+
+      // ----- 2. THEME -----
+      const themeBtn = document.getElementById('theme-toggle-user');
+      function setTheme(theme) {
+        htmlEl.setAttribute('data-theme', theme);
+        localStorage.setItem('AdmitEdge_theme', theme);
+        if (themeBtn) themeBtn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      }
+      const savedTheme = localStorage.getItem('AdmitEdge_theme') || 'light';
+      setTheme(savedTheme);
+      if (themeBtn) themeBtn.addEventListener('click', () => { const current = htmlEl.getAttribute('data-theme'); setTheme(current === 'light' ? 'dark' : 'light'); });
+
+      // ----- 3. RTL -----
+      const langBtn = document.getElementById('lang-toggle');
+      function setDirection(dir) { htmlEl.setAttribute('dir', dir); localStorage.setItem('AdmitEdge_lang', dir === 'rtl' ? 'ar' : 'en'); }
+      const savedLang = localStorage.getItem('AdmitEdge_lang') || 'en';
+      setDirection(savedLang === 'ar' ? 'rtl' : 'ltr');
+      if (langBtn) langBtn.addEventListener('click', () => { const currentDir = htmlEl.getAttribute('dir') || 'ltr'; setDirection(currentDir === 'ltr' ? 'rtl' : 'ltr'); });
+
+      // ----- 4. REVEAL -----
+      function checkReveal() { document.querySelectorAll('.reveal').forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add('active'); }); }
+      window.addEventListener('scroll', checkReveal);
+      window.addEventListener('load', checkReveal);
+
+      // ----- 5. NAVIGATION -----
+      const sections = ['overview','students','essays','interviews','counselors','workload','reports','settings','logout'];
+      const sidebarLinks = document.querySelectorAll('.sidebar-link');
+      window.activateSection = function(sectionId) {
+        sections.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
+        const activeEl = document.getElementById(sectionId);
+        if (activeEl) { activeEl.classList.remove('hidden'); activeEl.classList.add('active'); }
+        sidebarLinks.forEach(link => { link.classList.remove('active'); if (link.dataset.section === sectionId) link.classList.add('active'); });
+        if (window.innerWidth < 1280) { toggleMobileMenu(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      };
+      sidebarLinks.forEach(link => { link.addEventListener('click', function(e) { e.preventDefault(); const section = this.dataset.section; if (section) activateSection(section); }); });
+      activateSection('overview');
+    })();
+  </script>
+</body>
+</html>

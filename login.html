@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3z'/></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sign In | AdmitEdge - College Admissions Counseling</title>
+
+    <script src="tailwind.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        /* ========== THEME VARIABLES (Ivy League / Academic Counseling: Collegiate Royal Blue + Gold) ========== */
+        :root,
+        html[data-theme='light'] {
+            --bg-body: #F8FAFC;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --accent: #2563EB; /* Inspiring Academic Blue */
+            --accent-dark: #1D4ED8;
+            --accent-light: #EFF6FF;
+            --gold: #F59E0B; /* Ivy Gold */
+            --primary: #1E3A8A; /* Deep Navy */
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+            --hover-bg: #F1F5F9;
+            --footer-bg: #0F172A;
+            --footer-text: #E2E8F0;
+        }
+
+        html[data-theme='dark'] {
+            color-scheme: dark;
+            --bg-body: #0A0F1D;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --accent: #3B82F6;
+            --accent-dark: #2563EB;
+            --accent-light: #1E293B;
+            --gold: #FBBF24;
+            --primary: #1E40AF;
+            --card-bg: #131D31;
+            --border-light: #1E293B;
+            --hover-bg: #1B2942;
+            --footer-bg: #070B14;
+            --footer-text: #CBD5E1;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            height: 100vh;
+            max-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            transition: background-color 0.25s ease, color 0.2s;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .text-accent { color: var(--accent); }
+        .bg-accent { background-color: var(--accent); }
+        .border-accent { border-color: var(--accent); }
+        .bg-card { background-color: var(--card-bg); }
+        .text-secondary { color: var(--text-secondary); }
+        .border-border { border-color: var(--border-light); }
+
+        /* Floating controls */
+        .controls {
+            position: fixed;
+            top: 0.85rem;
+            right: 0.85rem;
+            display: flex;
+            gap: 0.4rem;
+            z-index: 50;
+        }
+        html[dir="rtl"] .controls { right: auto; left: 0.85rem; }
+
+        .btn-control {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+        .btn-control:hover {
+            background: var(--hover-bg);
+            color: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        /* Split layout */
+        .auth-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 100vh;
+            max-height: 100vh;
+        }
+        html[dir="rtl"] .auth-wrapper { direction: rtl; }
+
+        /* LEFT — Visual panel */
+        .visual-panel {
+            position: relative;
+            background: #0f172a;
+            overflow: hidden;
+            padding: 2.25rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+            height: 100vh;
+        }
+        .visual-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.35;
+            z-index: 0;
+        }
+        .visual-panel::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.92) 0%, rgba(15, 23, 42, 0.95) 100%);
+            z-index: 1;
+        }
+
+        .visual-panel .content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .visual-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            text-decoration: none;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+        .visual-logo-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+            font-size: 1.15rem;
+        }
+        .visual-logo-text {
+            font-weight: 700;
+            font-size: 1.35rem;
+            letter-spacing: -0.02em;
+        }
+
+        .visual-headline {
+            font-weight: 800;
+            font-size: 1.85rem;
+            line-height: 1.18;
+            margin-bottom: 0.65rem;
+            letter-spacing: -0.02em;
+        }
+        .visual-headline span {
+            background: linear-gradient(135deg, #60A5FA 0%, #93C5FD 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .visual-subtext {
+            font-size: 0.88rem;
+            line-height: 1.55;
+            color: #CBD5E1;
+            max-width: 380px;
+            margin-bottom: 1.5rem;
+        }
+
+        .visual-features {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .visual-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.82rem;
+            color: #E2E8F0;
+        }
+        .visual-feature i {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(37, 99, 235, 0.25);
+            border: 1px solid rgba(96, 165, 250, 0.35);
+            color: #60A5FA;
+            font-size: 0.68rem;
+            flex-shrink: 0;
+        }
+
+        .visual-stats {
+            display: flex;
+            gap: 1.75rem;
+            padding-top: 1.1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .visual-stat-value {
+            font-weight: 800;
+            font-size: 1.45rem;
+            color: #FFFFFF;
+            line-height: 1.1;
+        }
+        .visual-stat-label {
+            font-size: 0.7rem;
+            color: #94A3B8;
+            margin-top: 0.2rem;
+        }
+
+        /* RIGHT — Form */
+        .form-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 2rem;
+            background-color: var(--bg-body);
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .form-container {
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .mobile-logo {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            margin-bottom: 1.25rem;
+            text-decoration: none;
+        }
+
+        .form-heading {
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+        .form-heading .eyebrow {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.45rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, 0.08);
+        }
+        .form-heading h1 {
+            font-weight: 800;
+            font-size: 1.65rem;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .form-heading p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Fields */
+        .field {
+            margin-bottom: 0.85rem;
+        }
+        .field-label {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 0.35rem;
+        }
+        .field-wrapper {
+            position: relative;
+        }
+        .field-wrapper i.field-icon {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            pointer-events: none;
+            transition: color 0.2s ease;
+            z-index: 1;
+        }
+        html[dir="rtl"] .field-wrapper i.field-icon { left: auto; right: 0.9rem; }
+
+        .input {
+            width: 100%;
+            padding: 0.68rem 0.9rem 0.68rem 2.4rem;
+            border-radius: 10px;
+            font-size: 0.86rem;
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-light);
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.25s ease;
+            font-family: inherit;
+        }
+        html[dir="rtl"] .input { padding: 0.68rem 2.4rem 0.68rem 0.9rem; }
+        .input::placeholder { color: var(--text-secondary); opacity: 0.6; }
+        .input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .input:focus ~ i.field-icon { color: var(--accent); }
+
+        .btn-password-toggle {
+            position: absolute;
+            right: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            padding: 0.3rem;
+            transition: color 0.2s ease;
+        }
+        html[dir="rtl"] .btn-password-toggle { right: auto; left: 0.85rem; }
+        .btn-password-toggle:hover { color: var(--accent); }
+        .input.with-toggle { padding-right: 2.4rem; }
+        html[dir="rtl"] .input.with-toggle { padding-right: 2.4rem; padding-left: 2.4rem; }
+
+        /* Form row */
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.78rem;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        .checkbox-label input {
+            width: 14px; height: 14px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+        .forgot-link {
+            font-weight: 600;
+            color: var(--accent);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .forgot-link:hover { opacity: 0.8; text-decoration: underline; }
+
+        /* Submit */
+        .btn-submit {
+            width: 100%;
+            padding: 0.78rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            color: white;
+            cursor: pointer;
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            box-shadow: 0 8px 18px -5px rgba(37, 99, 235, 0.4);
+            transition: all 0.25s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+        }
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px -5px rgba(37, 99, 235, 0.5);
+            background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%);
+        }
+        .btn-submit:active { transform: translateY(0); }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 1.1rem 0 0.85rem;
+            color: var(--text-secondary);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-light);
+        }
+
+        /* Social */
+        .social-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.6rem;
+            margin-bottom: 1.1rem;
+        }
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.65rem;
+            border-radius: 10px;
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .social-btn:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px -3px rgba(37, 99, 235, 0.2);
+        }
+        .social-btn svg { width: 18px; height: 18px; }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+        .footer-note a {
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .footer-note a:hover { text-decoration: underline; }
+
+        .demo-hint {
+            margin-top: 0.9rem;
+            padding: 0.6rem 0.85rem;
+            border-radius: 10px;
+            background: rgba(37, 99, 235, 0.07);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            text-align: center;
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+        }
+        .demo-hint i { color: var(--accent); margin-right: 0.35rem; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .auth-wrapper { grid-template-columns: 1fr; }
+            html[dir="rtl"] .auth-wrapper { grid-template-columns: 1fr; }
+            .visual-panel { display: none; }
+            .mobile-logo { display: flex; }
+            .form-panel { padding: 2rem 1.25rem; }
+            .form-heading h1 { font-size: 1.7rem; }
+        }
+
+        @media (max-width: 480px) {
+            .form-panel { padding: 0.75rem 0.85rem; }
+            .controls { top: 0.5rem; right: 0.5rem; gap: 0.3rem; }
+            .btn-control { width: 32px; height: 32px; font-size: 0.75rem; }
+            .mobile-logo { margin-bottom: 0.5rem; margin-top: 1rem; }
+            .mobile-logo .w-9 { width: 1.85rem; height: 1.85rem; }
+            .mobile-logo svg { width: 1rem; height: 1rem; }
+            .mobile-logo .text-lg { font-size: 1rem; }
+            .form-heading { margin-bottom: 0.75rem; }
+            .form-heading .eyebrow { margin-bottom: 0.25rem; font-size: 0.6rem; padding: 0.15rem 0.5rem; }
+            .form-heading h1 { font-size: 1.25rem; margin-bottom: 0.15rem; }
+            .form-heading p { font-size: 0.75rem; line-height: 1.35; }
+            .field { margin-bottom: 0.5rem; }
+            .field-label { font-size: 0.68rem; margin-bottom: 0.25rem; }
+            .input { padding: 0.55rem 0.75rem 0.55rem 2.2rem; font-size: 0.8rem; border-radius: 9px; }
+            html[dir="rtl"] .input { padding: 0.55rem 2.2rem 0.55rem 0.75rem; }
+            .field-wrapper i.field-icon { left: 0.75rem; font-size: 0.75rem; }
+            html[dir="rtl"] .field-wrapper i.field-icon { right: 0.75rem; }
+            .input.with-toggle { padding-right: 2.2rem; }
+            html[dir="rtl"] .input.with-toggle { padding-right: 2.2rem; padding-left: 2.2rem; }
+            .btn-password-toggle { right: 0.65rem; font-size: 0.75rem; }
+            html[dir="rtl"] .btn-password-toggle { left: 0.65rem; }
+            .form-row { margin-bottom: 0.8rem; font-size: 0.72rem; }
+            .btn-submit { padding: 0.65rem; font-size: 0.82rem; border-radius: 9px; }
+            .divider { margin: 0.8rem 0 0.6rem; font-size: 0.6rem; gap: 0.6rem; }
+            .social-row { margin-bottom: 0.8rem; gap: 0.45rem; }
+            .social-btn { padding: 0.5rem; border-radius: 9px; }
+            .social-btn svg { width: 16px; height: 16px; }
+            .footer-note { font-size: 0.72rem; }
+            .demo-hint { margin-top: 0.75rem; padding: 0.5rem; font-size: 0.68rem; }
+        }
+
+        /* Specific extra-tight tuning for 360px (e.g. Galaxy S8+, iPhone SE) */
+        @media (max-width: 375px) {
+            .form-panel { padding: 0.5rem 0.75rem; }
+            .mobile-logo { margin-top: 0.5rem; margin-bottom: 0.35rem; }
+            .form-heading { margin-bottom: 0.6rem; }
+            .form-heading h1 { font-size: 1.18rem; }
+            .form-heading p { font-size: 0.72rem; }
+            .field { margin-bottom: 0.45rem; }
+            .field-label { font-size: 0.65rem; margin-bottom: 0.2rem; }
+            .input { padding: 0.48rem 0.65rem 0.48rem 2.1rem; font-size: 0.78rem; }
+            html[dir="rtl"] .input { padding: 0.48rem 2.1rem 0.48rem 0.65rem; }
+            .form-row { margin-bottom: 0.65rem; font-size: 0.7rem; }
+            .btn-submit { padding: 0.58rem; font-size: 0.78rem; }
+            .divider { margin: 0.65rem 0 0.5rem; font-size: 0.58rem; }
+            .social-row { margin-bottom: 0.65rem; }
+            .social-btn { padding: 0.45rem; }
+            .social-btn svg { width: 15px; height: 15px; }
+        }
+            /* Call/Phone icon facing opposite direction site-wide */
+        .fa-phone, .fa-phone-alt, .fa-phone-flip, .fa-phone-volume {
+            transform: scaleX(-1);
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating controls -->
+    <div class="controls">
+        <button id="lang-toggle" class="btn-control" title="Toggle RTL/LTR">
+            <i class="fas fa-exchange-alt text-sm"></i>
+        </button>
+        <button id="theme-toggle" class="btn-control" title="Toggle Theme">
+            <i class="fas fa-moon light-icon text-sm"></i>
+            <i class="fas fa-sun dark-icon hidden text-sm"></i>
+        </button>
+    </div>
+
+    <!-- Split auth layout -->
+    <div class="auth-wrapper">
+
+        <!-- LEFT — Visual panel -->
+        <aside class="visual-panel">
+            <div class="content">
+                <!-- Logo -->
+                <a href="index.html" class="visual-logo group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0">
+                        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col text-left justify-center">
+                        <span class="text-xl font-bold tracking-tight text-white leading-tight">
+                            Admit<span class="text-blue-400 font-extrabold">Edge</span>
+                        </span>
+                        <span class="text-[9.5px] uppercase tracking-[0.16em] font-semibold text-blue-200 leading-tight">
+                            College Counseling
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Headline -->
+                <h2 class="visual-headline">
+                    Turn Your Dream University<br>
+                    <span>Into Your Acceptance Letter.</span>
+                </h2>
+                <p class="visual-subtext">
+                    Sign in to access your student portal, review essay feedback from former admissions officers, and manage your Ivy+ application timeline.
+                </p>
+
+                <!-- Features -->
+                <div class="visual-features">
+                    <div class="visual-feature">
+                        <i class="fas fa-check"></i>
+                        <span>Track application milestones & deadlines</span>
+                    </div>
+                    <div class="visual-feature">
+                        <i class="fas fa-check"></i>
+                        <span>Line-by-line Common App essay editing & feedback</span>
+                    </div>
+                    <div class="visual-feature">
+                        <i class="fas fa-check"></i>
+                        <span>Schedule 1-on-1 counselor advisory sessions</span>
+                    </div>
+                    <div class="visual-feature">
+                        <i class="fas fa-check"></i>
+                        <span>Review mock alumni interview recordings</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="content visual-stats">
+                <div>
+                    <div class="visual-stat-value">96.8%</div>
+                    <div class="visual-stat-label">Top 3 Choice Admits</div>
+                </div>
+                <div>
+                    <div class="visual-stat-value">4.2x</div>
+                    <div class="visual-stat-label">Higher Ivy Admit Rate</div>
+                </div>
+                <div>
+                    <div class="visual-stat-value">1,850+</div>
+                    <div class="visual-stat-label">Accepted Scholars</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT — Form -->
+        <main class="form-panel">
+            <div class="form-container">
+
+                <!-- Mobile logo -->
+                <a href="index.html" class="mobile-logo group">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shrink-0">
+                        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col text-left">
+                        <span class="text-lg font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+                            Admit<span class="text-accent font-extrabold">Edge</span>
+                        </span>
+                        <span class="text-[9px] uppercase tracking-[0.16em] font-semibold text-slate-500 dark:text-slate-400 leading-tight">
+                            College Counseling
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Heading -->
+                <div class="form-heading">
+                    <span class="eyebrow">Student & Parent Portal</span>
+                    <h1>Welcome Back</h1>
+                    <p>Sign in to your candidate dashboard to continue your admissions journey.</p>
+                </div>
+
+                <!-- Form -->
+                <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+
+                    <div class="field">
+                        <label class="field-label" for="loginEmail">Student or Parent Email</label>
+                        <div class="field-wrapper">
+                            <input type="email" id="loginEmail" class="input" placeholder="student@example.com" required autocomplete="email">
+                            <i class="fas fa-envelope field-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label" for="loginPassword">Password</label>
+                        <div class="field-wrapper">
+                            <input type="password" id="loginPassword" class="input with-toggle" placeholder="••••••••" required autocomplete="current-password">
+                            <i class="fas fa-lock field-icon"></i>
+                            <button type="button" class="btn-password-toggle" onclick="togglePassword('loginPassword', this)">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-right-to-bracket"></i>
+                        Sign In to Student Dashboard
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="divider">or continue with</div>
+
+                <!-- Social -->
+                <div class="social-row">
+                    <button class="social-btn" title="Google" onclick="socialLogin('Google')">
+                        <svg viewBox="0 0 48 48">
+                            <path fill="#EA4335" d="M24 9.5c3.2 0 6.1 1.1 8.3 3.1l6.2-6.2C34.8 2.4 29.7 0 24 0 14.6 0 6.6 5.5 2.7 13.4l7.3 5.7C11.9 13.1 17.4 9.5 24 9.5z"/>
+                            <path fill="#34A853" d="M46.1 24.5c0-1.7-.2-3.3-.5-4.9H24v9.3h12.4c-.5 2.9-2.1 5.4-4.5 7.1l6.9 5.4c4-3.7 6.3-9.1 6.3-16.9z"/>
+                            <path fill="#FBBC05" d="M10 28.7c-.5-1.4-.8-2.9-.8-4.4s.3-3 .8-4.4l-7.3-5.7C1 17.1 0 20.4 0 24s1 6.9 2.7 9.8l7.3-5.7z"/>
+                            <path fill="#EA4335" d="M24 48c6.5 0 11.9-2.1 15.8-5.7l-6.9-5.4c-2 1.3-4.6 2.1-8.9 2.1-6.6 0-12.1-3.6-14.1-8.6l-7.3 5.7C6.6 42.5 14.6 48 24 48z"/>
+                        </svg>
+                    </button>
+                    <button class="social-btn" title="Apple" onclick="socialLogin('Apple')">
+                        <svg fill="currentColor" viewBox="0 0 24 24" class="text-slate-800 dark:text-white">
+                            <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                        </svg>
+                    </button>
+                    <button class="social-btn" title="Microsoft" onclick="socialLogin('Microsoft')">
+                        <svg viewBox="0 0 23 23">
+                            <path fill="#f35325" d="M1 1h10v10H1z"/>
+                            <path fill="#81bc06" d="M12 1h10v10H12z"/>
+                            <path fill="#05a6f0" d="M1 12h10v10H1z"/>
+                            <path fill="#ffba08" d="M12 12h10v10H12z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Footer -->
+                <p class="footer-note">
+                    Applying for the 2025-2026 cycle?
+                    <a href="signup.html">Create a student account</a>
+                </p>
+
+                <!-- Demo hint -->
+                <div class="demo-hint">
+                    <i class="fas fa-circle-info"></i>
+                    Demo Access: student@admitedge.com / any password
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const html = document.documentElement;
+
+        // ── Theme toggle ──
+        const themeBtn = document.getElementById('theme-toggle');
+        const applyTheme = (theme) => {
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            document.querySelectorAll('.light-icon').forEach(i => i.classList.toggle('hidden', theme === 'dark'));
+            document.querySelectorAll('.dark-icon').forEach(i => i.classList.toggle('hidden', theme === 'light'));
+        };
+        themeBtn.addEventListener('click', () => {
+            applyTheme(html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        });
+        applyTheme(localStorage.getItem('theme') || 'light');
+
+        // ── RTL toggle ──
+        const langBtn = document.getElementById('lang-toggle');
+        langBtn.addEventListener('click', () => {
+            const isRtl = html.getAttribute('dir') === 'rtl';
+            html.setAttribute('dir', isRtl ? 'ltr' : 'rtl');
+            localStorage.setItem('dir', isRtl ? 'ltr' : 'rtl');
+        });
+        html.setAttribute('dir', localStorage.getItem('dir') || 'ltr');
+
+        // ── Password toggle ──
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // ── Login submit ──
+        function handleLogin() {
+            window.location.href = 'user.html';
+        }
+
+        // ── Social login ──
+        function socialLogin(provider) {
+            console.log('Social login with', provider);
+            window.location.href = 'user.html';
+        }
+    </script>
+</body>
+</html>

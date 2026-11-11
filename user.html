@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3z'/></svg>">
+  <title>AdmitEdge · Student Application Dashboard</title>
+  <!-- Tailwind + Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* --- Root Color Engine (AdmitEdge Theme) --- */
+    :root, html[data-theme='light'] {
+      --bg-body: #F8FAFC;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --accent: #2563EB;
+      --accent-dark: #1D4ED8;
+      --accent-light: #EFF6FF;
+      --gold: #F59E0B;
+      --primary: #1E3A8A;
+      --card-bg: #FFFFFF;
+      --border-light: #E2E8F0;
+      --hover-bg: #F1F5F9;
+      --footer-bg: #0F172A;
+      --footer-text: #E2E8F0;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --info: #3B82F6;
+      --sidebar-bg: #FFFFFF;
+    }
+    html[data-theme='dark'] {
+      color-scheme: dark;
+      --bg-body: #0A0F1D;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --accent: #3B82F6;
+      --accent-dark: #2563EB;
+      --accent-light: #1E293B;
+      --gold: #FBBF24;
+      --primary: #1E40AF;
+      --card-bg: #131D31;
+      --border-light: #1E293B;
+      --hover-bg: #1B2942;
+      --footer-bg: #070B14;
+      --footer-text: #CBD5E1;
+      --success: #059669;
+      --warning: #D97706;
+      --danger: #DC2626;
+      --info: #2563EB;
+      --sidebar-bg: #0A0F1D;
+    }
+
+    body {
+      background: var(--bg-body);
+      color: var(--text-primary);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      transition: background-color 0.25s ease, color 0.2s;
+      overflow-x: hidden;
+      width: 100%;
+    }
+    * { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, h5, h6 { font-weight: 600 !important; }
+    p:not(.font-medium), div.text-secondary { font-weight: 400 !important; }
+
+    .text-accent { color: var(--accent); }
+    .bg-accent { background-color: var(--accent); }
+    .border-accent { border-color: var(--accent); }
+    .bg-card { background-color: var(--card-bg); }
+    .text-secondary { color: var(--text-secondary); }
+    .border-border { border-color: var(--border-light); }
+    .bg-hover { background-color: var(--hover-bg); }
+    .text-primary-text { color: var(--text-primary); }
+    .bg-body { background-color: var(--bg-body); }
+    .bg-sidebar { background-color: var(--sidebar-bg); }
+    .text-success { color: var(--success); }
+    .text-warning { color: var(--warning); }
+    .text-danger { color: var(--danger); }
+    .text-info { color: var(--info); }
+    .bg-success { background-color: var(--success); }
+    .bg-warning { background-color: var(--warning); }
+    .bg-danger { background-color: var(--danger); }
+    .bg-info { background-color: var(--info); }
+    .text-gold { color: var(--gold); }
+
+    .dashboard-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 1.25rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 18px -8px rgba(0,0,0,0.04);
+      height: auto;
+    }
+    .dashboard-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 16px 24px -12px rgba(37,99,235,0.15);
+    }
+    .status-pulse {
+      width: 10px; height: 10px;
+      background-color: var(--success);
+      border-radius: 9999px;
+      box-shadow: 0 0 0 0 rgba(16,185,129,0.5);
+      animation: pulse2 2s infinite;
+    }
+    @keyframes pulse2 { 70% { box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
+
+    .sidebar-link {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
+      color: var(--text-secondary);
+      transition: all 0.18s ease;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+    .sidebar-link:hover, .sidebar-link.active {
+      background: var(--accent);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .sidebar-link:hover i, .sidebar-link.active i { color: white; }
+    .sidebar-link.logout:hover { background: #d13b3b; color: white; }
+
+    html[dir="rtl"] .sidebar-link { flex-direction: row-reverse; }
+    html[dir="rtl"] .ml-auto { margin-right: auto; margin-left: 0; }
+
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s cubic-bezier(0.2,0.9,0.3,1), transform 0.6s cubic-bezier(0.2,0.9,0.3,1); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+    .user-section { display: block; }
+    .bg-accent-gradient { background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white !important;
+      border-radius: 9999px;
+      transition: 0.2s;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      font-weight: 600;
+    }
+    .btn-primary:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+    }
+    .btn-outline {
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      border-radius: 9999px;
+      background: transparent;
+      transition: 0.2s;
+      font-weight: 600;
+    }
+    .btn-outline:hover {
+      background: var(--accent);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar { height: 4px; width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+
+    #mobile-overlay {
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      position: fixed; inset: 0; z-index: 55;
+    }
+    #mobile-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .chart-bar {
+      height: 8px; border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent), #3B82F6);
+      transition: width 0.3s ease;
+    }
+    .progress-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent), #3B82F6);
+      transition: width 0.3s ease;
+    }
+    .status-badge {
+      padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.7rem;
+      font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .status-badge.active { background-color: var(--success); color: white; }
+    .status-badge.pending { background-color: var(--warning); color: white; }
+    .status-badge.cancelled { background-color: var(--danger); color: white; }
+    .status-badge.completed { background-color: var(--info); color: white; }
+    .status-badge.review { background-color: var(--accent); color: white; }
+          /* Call/Phone icon facing opposite direction site-wide */
+        .fa-phone, .fa-phone-alt, .fa-phone-flip, .fa-phone-volume {
+            transform: scaleX(-1);
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="antialiased h-screen overflow-hidden w-full">
+
+  <!-- TOP BAR -->
+  <header class="border-b border-border bg-card sticky top-0 z-50 w-full">
+    <div class="max-w-[1920px] mx-auto px-2 sm:px-6 lg:px-10 py-3 flex items-center justify-between gap-1 sm:gap-3">
+      <!-- Hamburger + Brand -->
+      <div class="flex items-center gap-1 sm:gap-3">
+        <button id="mobile-menu-toggle" class="xl:hidden p-1.5 sm:p-2 -ml-1 sm:-ml-2 rounded-xl hover:bg-hover transition text-primary-text">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <a href="index.html" class="flex items-center gap-2 shrink-0 group">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+            </div>
+            <div class="leading-tight">
+              <span class="block text-lg sm:text-xl font-bold tracking-tight text-primary-text">Admit<span class="text-accent">Edge</span></span>
+              <span class="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-secondary">Student Portal</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <!-- Student Utilities -->
+      <div class="flex items-center gap-1 sm:gap-2.5 lg:gap-3 shrink-0 rtl:flex-row-reverse min-w-0">
+        <!-- Search bar: hidden on mobile/tablet to prevent header cut off, visible on xl screens -->
+        <div class="hidden xl:flex items-center bg-hover rounded-full px-3.5 py-1.5 border border-border w-48 overflow-hidden">
+          <i class="fas fa-search text-secondary text-xs mr-2"></i>
+          <input type="text" placeholder="Search essays..." class="bg-transparent border-none outline-none text-xs w-full text-primary-text placeholder-secondary/50">
+        </div>
+        <button id="lang-toggle" class="p-1.5 sm:p-2 rounded-full hover:bg-hover transition text-primary-text" title="Toggle Language / RTL"><i class="fas fa-exchange-alt text-xs sm:text-sm"></i></button>
+        <button id="theme-toggle-user" class="p-1.5 sm:p-2 rounded-full hover:bg-hover transition text-primary-text" title="Toggle Theme"><i class="fas fa-moon text-xs sm:text-sm"></i></button>
+        <div class="relative">
+          <button class="p-1.5 sm:p-2 rounded-full hover:bg-hover transition text-primary-text relative" title="Notifications">
+            <i class="fas fa-bell text-xs sm:text-sm"></i>
+            <span class="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full"></span>
+          </button>
+        </div>
+        <div class="relative flex items-center gap-1.5 sm:gap-2 pl-2 sm:pl-3 border-l border-border rtl:border-l-0 rtl:border-r min-w-0 shrink-0">
+          <div class="relative flex-shrink-0">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-accent/10 border border-accent flex items-center justify-center text-accent font-semibold">
+              <i class="fas fa-user-graduate text-xs"></i>
+            </div>
+            <span class="absolute bottom-0 right-0 status-pulse"></span>
+          </div>
+          <div class="hidden sm:block text-left min-w-0">
+            <p class="font-semibold text-xs sm:text-sm leading-none truncate max-w-[85px] md:max-w-[110px] lg:max-w-none">Maya Lin</p>
+            <p class="text-[9px] sm:text-[10px] text-secondary mt-0.5 uppercase tracking-wider font-semibold truncate hidden lg:block">Class of 2027 · EA</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE OVERLAY -->
+  <div id="mobile-overlay" class="xl:hidden"></div>
+
+  <!-- MAIN LAYOUT -->
+  <main class="max-w-[1920px] mx-auto px-2.5 sm:px-6 lg:px-10 py-3 sm:py-6 h-[calc(100vh-56px)] sm:h-[calc(100vh-64px)] w-full relative">
+    <div class="flex flex-col xl:flex-row gap-4 xl:gap-6 xl:gap-10 h-full">
+
+      <!-- SIDEBAR -->
+      <aside id="sidebar-container" class="fixed xl:static top-0 left-0 rtl:right-0 rtl:left-auto h-full xl:h-auto w-72 xl:w-80 z-[60] xl:z-10 transform -translate-x-full rtl:translate-x-full xl:translate-x-0 xl:rtl:translate-x-0 transition-transform duration-300 ease-in-out bg-sidebar xl:bg-transparent flex-shrink-0">
+        <div class="dashboard-card p-5 bg-sidebar h-full overflow-y-auto custom-scrollbar border-r xl:border border-border xl:rounded-[1.25rem] rounded-none shadow-none xl:shadow-md">
+          <!-- Mobile header -->
+          <div class="flex xl:hidden justify-between items-center mb-6 px-2">
+            <div class="flex items-center gap-2 text-accent"><i class="fas fa-bars-staggered"></i><span class="text-xs font-medium uppercase tracking-widest">Menu</span></div>
+            <button id="close-sidebar" class="p-2 hover:bg-hover rounded-lg text-primary-text"><i class="fas fa-times"></i></button>
+          </div>
+          <!-- Mobile profile -->
+          <div class="flex xl:hidden items-center gap-3 mb-6 px-2 pb-6 border-b border-border">
+            <div class="relative flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-accent/10 border border-accent flex items-center justify-center text-accent font-semibold"><i class="fas fa-user-graduate text-sm"></i></div>
+              <span class="absolute bottom-0 right-0 status-pulse"></span>
+            </div>
+            <div><p class="font-semibold text-primary-text leading-tight">Maya Lin</p><p class="text-[10px] text-secondary mt-0.5 uppercase tracking-widest font-medium">Class of 2027 · EA</p></div>
+          </div>
+
+          <nav class="flex flex-col gap-1">
+            <p class="text-[10px] uppercase tracking-widest text-secondary font-medium mt-2 mb-2 px-2">My Application</p>
+            <a href="#" onclick="activateSection('overview')" data-section="overview" class="sidebar-link active"><i class="fas fa-chart-pie w-5"></i><span>Overview</span></a>
+            <a href="#" onclick="activateSection('checklists')" data-section="checklists" class="sidebar-link"><i class="fas fa-tasks w-5"></i><span>Application Checklist</span></a>
+            <a href="#" onclick="activateSection('essays')" data-section="essays" class="sidebar-link"><i class="fas fa-file-signature w-5"></i><span>Essay Feedback</span></a>
+            <a href="#" onclick="activateSection('meetings')" data-section="meetings" class="sidebar-link"><i class="fas fa-video w-5"></i><span>Counselor Meetings</span></a>
+            <p class="text-[10px] uppercase tracking-widest text-secondary font-medium mt-4 mb-2 px-2">Resources</p>
+            <a href="#" onclick="activateSection('colleges')" data-section="colleges" class="sidebar-link"><i class="fas fa-university w-5"></i><span>My College List</span></a>
+            <a href="#" onclick="activateSection('resources')" data-section="resources" class="sidebar-link"><i class="fas fa-book-open w-5"></i><span>Essay Resources</span></a>
+            <p class="text-[10px] uppercase tracking-widest text-secondary font-medium mt-4 mb-2 px-2">Account</p>
+            <a href="#" onclick="activateSection('settings')" data-section="settings" class="sidebar-link"><i class="fas fa-sliders w-5"></i><span>Settings</span></a>
+            <a href="#" onclick="activateSection('logout')" data-section="logout" class="sidebar-link logout mt-2 text-red-500"><i class="fas fa-power-off w-5"></i><span>Logout</span></a>
+          </nav>
+
+          <div class="mt-8 pt-4 border-t border-border text-[11px] text-secondary">
+            <div class="flex justify-between"><span>Checklist</span><span class="font-semibold text-success">78% complete</span></div>
+            <div class="flex justify-between mt-1.5"><span>Essays</span><span class="font-medium text-warning">3 in review</span></div>
+            <div class="flex justify-between mt-1.5"><span>Next meeting</span><span class="font-medium text-accent">Tomorrow 5:30 PM</span></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CONTENT AREA -->
+      <div class="flex-1 min-w-0 overflow-y-auto custom-scrollbar pr-0 sm:pr-2">
+
+        <!-- OVERVIEW / DASHBOARD -->
+        <div id="overview" class="user-section">
+          <div class="dashboard-card p-4 sm:p-6 lg:p-7 reveal active mb-4 sm:mb-6 bg-accent-gradient text-white">
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center items-start gap-3 sm:gap-4">
+              <div>
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-semibold mb-1.5 sm:mb-2 leading-tight">👋 Welcome back, Maya</h2>
+                <p class="text-white/90 text-xs sm:text-sm leading-relaxed">Track your application progress, essay feedback, and counselor meetings.</p>
+              </div>
+              <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full sm:w-auto shrink-0">
+                <span class="bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Class of 2027</span>
+                <span class="bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5"><i class="fas fa-circle text-emerald-300 text-[6px]"></i> REA Candidate</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-6 mb-4 sm:mb-6">
+            <div class="dashboard-card p-4 sm:p-6 reveal">
+              <div class="flex justify-between items-start gap-4">
+                <div><p class="text-secondary text-xs uppercase tracking-wider font-medium">Checklist Progress</p><p class="text-3xl font-bold mt-2">78%</p><p class="text-success text-xs font-medium mt-2 flex items-center gap-1"><i class="fas fa-arrow-up"></i> +12% this month</p></div>
+                <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0"><i class="fas fa-tasks text-accent text-xl"></i></div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-border flex gap-4 text-xs"><span><span class="font-semibold">14</span> <span class="text-secondary">tasks done</span></span><span><span class="font-semibold">4</span> <span class="text-secondary">pending</span></span></div>
+            </div>
+            <div class="dashboard-card p-4 sm:p-6 reveal">
+              <div class="flex justify-between items-start gap-4">
+                <div><p class="text-secondary text-xs uppercase tracking-wider font-medium">Essays in Review</p><p class="text-3xl font-bold mt-2">3</p><p class="text-warning text-xs font-medium mt-2 flex items-center gap-1"><i class="fas fa-clock"></i> 1 due in 5 days</p></div>
+                <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0"><i class="fas fa-file-signature text-accent text-xl"></i></div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-border flex gap-4 text-xs"><span><span class="font-semibold">2</span> <span class="text-secondary">approved</span></span><span><span class="font-semibold">1</span> <span class="text-secondary">in review</span></span></div>
+            </div>
+            <div class="dashboard-card p-4 sm:p-6 reveal">
+              <div class="flex justify-between items-start gap-4">
+                <div><p class="text-secondary text-xs uppercase tracking-wider font-medium">Next Meeting</p><p class="text-3xl font-bold mt-2">Apr 10</p><p class="text-info text-xs font-medium mt-2 flex items-center gap-1"><i class="fas fa-video"></i> MIT Mock Interview</p></div>
+                <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0"><i class="fas fa-video text-accent text-xl"></i></div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-border flex gap-4 text-xs"><span><span class="font-semibold">5:30 PM</span> <span class="text-secondary">EST</span></span><span><span class="font-semibold">Sarah J.</span> <span class="text-secondary">counselor</span></span></div>
+            </div>
+            <div class="dashboard-card p-4 sm:p-6 reveal">
+              <div class="flex justify-between items-start gap-4">
+                <div><p class="text-secondary text-xs uppercase tracking-wider font-medium">Target Schools</p><p class="text-3xl font-bold mt-2">6</p><p class="text-success text-xs font-medium mt-2 flex items-center gap-1"><i class="fas fa-check-circle"></i> Early Action ready</p></div>
+                <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center shrink-0"><i class="fas fa-university text-accent text-xl"></i></div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-border flex gap-4 text-xs"><span><span class="font-semibold">2</span> <span class="text-secondary">reach</span></span><span><span class="font-semibold">4</span> <span class="text-secondary">match</span></span></div>
+            </div>
+          </div>
+
+          <!-- Application progress + quick action -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div class="dashboard-card p-6 lg:col-span-2 reveal">
+              <div class="flex justify-between items-center mb-6"><h3 class="font-semibold text-lg">Application Progress · Class of 2027</h3><select class="bg-hover border border-border rounded-full px-4 py-2 text-xs font-medium uppercase"><option>All stages</option><option>Essays</option><option>Recs</option><option>Tests</option></select></div>
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between text-sm mb-2"><span>Common App Profile</span><span class="font-semibold text-success">Complete</span></div>
+                  <div class="progress-bar" style="width: 100%;"></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-2"><span>Personal Statement</span><span class="font-semibold text-accent">80% · Approved</span></div>
+                  <div class="progress-bar" style="width: 80%;"></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-2"><span>Stanford Supplemental Essays</span><span class="font-semibold text-warning">75% · In review</span></div>
+                  <div class="progress-bar" style="width: 75%;"></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-2"><span>Recommendation Letters</span><span class="font-semibold text-warning">50% · 2 of 4 requested</span></div>
+                  <div class="progress-bar" style="width: 50%;"></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-2"><span>Interviews & Mock Prep</span><span class="font-semibold text-accent">60% · In progress</span></div>
+                  <div class="progress-bar" style="width: 60%;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="dashboard-card p-4 sm:p-6 reveal">
+              <h3 class="font-semibold text-lg mb-4">Quick Actions</h3>
+              <div class="space-y-3">
+                <button class="w-full py-3 btn-primary text-sm font-semibold"><i class="fas fa-upload mr-2"></i> Upload New Essay Draft</button>
+                <button class="w-full py-3 border border-border rounded-xl text-sm font-medium hover:bg-hover"><i class="fas fa-calendar-plus mr-2"></i> Schedule Mock Interview</button>
+                <button class="w-full py-3 border border-border rounded-xl text-sm font-medium hover:bg-hover"><i class="fas fa-tasks mr-2"></i> Update Checklist</button>
+              </div>
+              <div class="mt-6 pt-4 border-t border-border text-xs text-secondary"><span class="block">💡 Tip: Your Stanford supplements are due in 5 days — prioritize the "Why Stanford" essay.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- APPLICATION CHECKLIST -->
+        <div id="checklists" class="user-section hidden">
+          <div class="dashboard-card p-4 sm:p-6 lg:p-7 reveal active">
+            <h2 class="text-lg sm:text-2xl font-semibold text-primary-text mb-4 sm:mb-6 flex items-center gap-2"><span class="text-accent">✅</span> Application Checklist</h2>
+            <div class="space-y-3 sm:space-y-4">
+              <!-- Item 1 -->
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                  <div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <i class="fas fa-check text-xs"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-sm sm:text-base leading-snug truncate">Common App Personal Statement</p>
+                    <p class="text-xs text-secondary truncate mt-0.5">Final approved draft signed off</p>
+                  </div>
+                </div>
+                <span class="status-badge active whitespace-nowrap shrink-0">Done</span>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                  <div class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                    <i class="fas fa-spinner fa-spin text-xs"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-sm sm:text-base leading-snug truncate">Stanford Supplemental Essays (3 of 4)</p>
+                    <p class="text-xs text-secondary truncate mt-0.5">Due in 5 days · In review with Dr. Vance</p>
+                  </div>
+                </div>
+                <span class="status-badge pending whitespace-nowrap shrink-0">Active</span>
+              </div>
+
+              <!-- Item 3 -->
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                  <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                    <i class="far fa-circle text-xs"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-sm sm:text-base leading-snug truncate">Official Transcripts & Recommendations</p>
+                    <p class="text-xs text-secondary truncate mt-0.5">Naviance portal submission · 2 of 4 recs requested</p>
+                  </div>
+                </div>
+                <span class="status-badge completed whitespace-nowrap shrink-0">Pending</span>
+              </div>
+
+              <!-- Item 4 -->
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                  <div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <i class="fas fa-check text-xs"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-sm sm:text-base leading-snug truncate">SAT/ACT Score Reports</p>
+                    <p class="text-xs text-secondary truncate mt-0.5">Sent to all target schools</p>
+                  </div>
+                </div>
+                <span class="status-badge active whitespace-nowrap shrink-0">Done</span>
+              </div>
+
+              <!-- Item 5 -->
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                  <div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <i class="fas fa-check text-xs"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-sm sm:text-base leading-snug truncate">Demonstrated Interest Tracking</p>
+                    <p class="text-xs text-secondary truncate mt-0.5">Campus visits, virtual info sessions, alumni chats</p>
+                  </div>
+                </div>
+                <span class="status-badge active whitespace-nowrap shrink-0">Done</span>
+              </div>
+            </div>
+            <div class="mt-6 p-4 bg-hover rounded-2xl text-sm"><i class="fas fa-info-circle text-accent mr-2"></i> Checklist items are synced with your counselor. Update status as you complete each task.</div>
+          </div>
+        </div>
+
+        <!-- ESSAY FEEDBACK -->
+        <div id="essays" class="user-section hidden">
+          <div class="dashboard-card p-5 sm:p-7 reveal active">
+            <h2 class="text-xl sm:text-2xl font-semibold text-primary-text mb-8 flex items-center gap-2"><span class="text-accent">📝</span> Essay Feedback</h2>
+            <div class="space-y-4">
+              <div class="p-4 bg-hover rounded-2xl">
+                <div class="flex items-center justify-between gap-2 mb-2"><span class="font-semibold text-warning">Dr. Julian Vance (Former Yale AO)</span><span class="text-xs text-secondary">Today, 2:15 PM</span></div>
+                <p class="text-sm text-secondary leading-relaxed italic mb-3">"The opening hook in paragraph 2 is significantly stronger. Highlight your biology robotics lab project right after the turning point..."</p>
+                <div class="flex gap-2 flex-wrap"><span class="status-badge completed whitespace-nowrap shrink-0 self-start sm:self-auto">Draft v4 reviewed</span><button class="text-accent text-xs hover:underline">Open Inline Diff →</button></div>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex flex-col gap-1.5">
+                <div class="flex items-start justify-between gap-2">
+                  <p class="font-semibold text-sm sm:text-base leading-snug">Columbia Why Major Essay</p>
+                  <span class="status-badge review whitespace-nowrap shrink-0">In Review</span>
+                </div>
+                <p class="text-xs text-secondary">Turnaround ETA: Tomorrow by 11:00 AM</p>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex flex-col gap-1.5">
+                <div class="flex items-start justify-between gap-2">
+                  <p class="font-semibold text-sm sm:text-base leading-snug">Common App Personal Statement</p>
+                  <span class="status-badge active whitespace-nowrap shrink-0">Approved</span>
+                </div>
+                <p class="text-xs text-secondary">Final approved draft · last edited Apr 02</p>
+              </div>
+            </div>
+            <div class="mt-6 p-4 bg-hover rounded-2xl text-sm"><i class="fas fa-info-circle text-accent mr-2"></i> Turnaround time is 48 hours or less. Upload new drafts via the dashboard.</div>
+          </div>
+        </div>
+
+        <!-- COUNSELOR MEETINGS -->
+        <div id="meetings" class="user-section hidden">
+          <div class="dashboard-card p-5 sm:p-7 reveal active">
+            <h2 class="text-xl sm:text-2xl font-semibold text-primary-text mb-8 flex items-center gap-2"><span class="text-accent">🎥</span> Counselor Meetings</h2>
+            <div class="space-y-4">
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl border border-accent/30 flex flex-col gap-2">
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <span class="font-semibold text-sm sm:text-base leading-snug">Upcoming: MIT Mock Interview</span>
+                    <p class="text-xs text-secondary mt-0.5"><i class="far fa-clock mr-1"></i> Thursday, 5:30 PM – 6:30 PM EST</p>
+                  </div>
+                  <span class="status-badge active whitespace-nowrap shrink-0">Tomorrow</span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-border gap-2 text-xs">
+                  <span class="text-secondary"><i class="fas fa-user-check text-success mr-1"></i> with Sarah Jenkins</span>
+                  <button class="px-3 py-1.5 btn-primary text-xs font-semibold rounded-lg">Join Zoom</button>
+                </div>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="font-semibold text-sm sm:text-base truncate">Past: Early Action Strategy</p>
+                  <p class="text-xs text-secondary mt-0.5">Apr 01, 2026 · 45 min · with Dr. Julian Vance</p>
+                </div>
+                <button class="text-accent text-xs font-semibold hover:underline shrink-0 whitespace-nowrap">View Notes</button>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="font-semibold text-sm sm:text-base truncate">Past: Essay Workshop</p>
+                  <p class="text-xs text-secondary mt-0.5">Mar 20, 2026 · 60 min · with Marcus Sterling</p>
+                </div>
+                <button class="text-accent text-xs font-semibold hover:underline shrink-0 whitespace-nowrap">View Recording</button>
+              </div>
+            </div>
+            <div class="mt-6 p-4 bg-hover rounded-2xl text-sm"><i class="fas fa-info-circle text-accent mr-2"></i> All mock interviews are recorded for review unless you opt out in settings.</div>
+          </div>
+        </div>
+
+        <!-- MY COLLEGE LIST -->
+        <div id="colleges" class="user-section hidden">
+          <div class="dashboard-card p-5 sm:p-7 reveal active">
+            <h2 class="text-xl sm:text-2xl font-semibold text-primary-text mb-8 flex items-center gap-2"><span class="text-accent">🏛️</span> My College List</h2>
+            <div class="space-y-3">
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <p class="font-semibold text-sm sm:text-base leading-snug truncate">Stanford University · Reach</p>
+                  <p class="text-xs text-secondary mt-0.5 truncate">Restrictive Early Action · Deadline: Nov 01</p>
+                </div>
+                <span class="status-badge review whitespace-nowrap shrink-0">EA</span>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <p class="font-semibold text-sm sm:text-base leading-snug truncate">MIT · Reach</p>
+                  <p class="text-xs text-secondary mt-0.5 truncate">Early Action · Deadline: Nov 01</p>
+                </div>
+                <span class="status-badge review whitespace-nowrap shrink-0">EA</span>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <p class="font-semibold text-sm sm:text-base leading-snug truncate">Columbia University · Reach</p>
+                  <p class="text-xs text-secondary mt-0.5 truncate">Early Decision · Deadline: Nov 01</p>
+                </div>
+                <span class="status-badge review whitespace-nowrap shrink-0">ED</span>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <p class="font-semibold text-sm sm:text-base leading-snug truncate">UC Berkeley · Match</p>
+                  <p class="text-xs text-secondary mt-0.5 truncate">Regular Decision · Deadline: Nov 30</p>
+                </div>
+                <span class="status-badge completed whitespace-nowrap shrink-0">RD</span>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <p class="font-semibold text-sm sm:text-base leading-snug truncate">UCLA · Match</p>
+                  <p class="text-xs text-secondary mt-0.5 truncate">Regular Decision · Deadline: Nov 30</p>
+                </div>
+                <span class="status-badge completed whitespace-nowrap shrink-0">RD</span>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <p class="font-semibold text-sm sm:text-base leading-snug truncate">University of Michigan · Safety</p>
+                  <p class="text-xs text-secondary mt-0.5 truncate">Early Action · Deadline: Nov 01</p>
+                </div>
+                <span class="status-badge active whitespace-nowrap shrink-0">EA</span>
+              </div>
+            </div>
+            <div class="mt-6 p-4 bg-hover rounded-2xl text-sm"><i class="fas fa-info-circle text-accent mr-2"></i> Discuss your final list with your counselor before submitting Early Action applications.</div>
+          </div>
+        </div>
+
+        <!-- ESSAY RESOURCES -->
+        <div id="resources" class="user-section hidden">
+          <div class="dashboard-card p-5 sm:p-7 reveal active">
+            <h2 class="text-xl sm:text-2xl font-semibold text-primary-text mb-8 flex items-center gap-2"><span class="text-accent">📚</span> Essay Resources</h2>
+            <div class="space-y-3">
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                  <div class="w-8 h-8 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                    <i class="fas fa-file-pdf text-xs"></i>
+                  </div>
+                  <span class="font-medium text-xs sm:text-sm truncate">Common App Essay Prompt Guide 2026–27</span>
+                </div>
+                <span class="text-xs text-secondary whitespace-nowrap shrink-0">PDF · 24 pages</span>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                  <div class="w-8 h-8 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                    <i class="fas fa-file-pdf text-xs"></i>
+                  </div>
+                  <span class="font-medium text-xs sm:text-sm truncate">50 Strong Personal Statement Openings</span>
+                </div>
+                <span class="text-xs text-secondary whitespace-nowrap shrink-0">PDF · 12 pages</span>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                  <div class="w-8 h-8 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                    <i class="fas fa-video text-xs"></i>
+                  </div>
+                  <span class="font-medium text-xs sm:text-sm truncate">"Why This College" Essay Workshop</span>
+                </div>
+                <span class="text-xs text-secondary whitespace-nowrap shrink-0">Video · 42 min</span>
+              </div>
+              <div class="p-3.5 sm:p-4 bg-hover rounded-2xl flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                  <div class="w-8 h-8 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                    <i class="fas fa-file-pdf text-xs"></i>
+                  </div>
+                  <span class="font-medium text-xs sm:text-sm truncate">Supplemental Essay Research Worksheet</span>
+                </div>
+                <span class="text-xs text-secondary whitespace-nowrap shrink-0">PDF · 6 pages</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="settings" class="user-section hidden">
+          <div class="dashboard-card p-5 sm:p-7 reveal active">
+            <h2 class="text-xl sm:text-2xl font-semibold text-primary-text mb-8 flex items-center gap-2"><span class="text-accent">⚙️</span> Account Settings</h2>
+            <div class="space-y-6">
+              <div>
+                <h3 class="font-semibold text-lg mb-4 pb-2 border-b border-border">Profile Information</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div><label class="text-xs uppercase tracking-wider font-semibold text-secondary block mb-2">Full Name</label><input type="text" value="Maya Lin" class="w-full bg-hover border border-border rounded-xl px-4 py-3 text-primary-text"></div>
+                  <div><label class="text-xs uppercase tracking-wider font-semibold text-secondary block mb-2">Email</label><input type="email" value="maya.lin@email.com" class="w-full bg-hover border border-border rounded-xl px-4 py-3 text-primary-text"></div>
+                  <div><label class="text-xs uppercase tracking-wider font-semibold text-secondary block mb-2">High School</label><input type="text" value="Lincoln High School" class="w-full bg-hover border border-border rounded-xl px-4 py-3 text-primary-text"></div>
+                  <div><label class="text-xs uppercase tracking-wider font-semibold text-secondary block mb-2">Graduation Year</label><input type="text" value="Class of 2027" disabled class="w-full bg-hover border border-border rounded-xl px-4 py-3 text-secondary"></div>
+                </div>
+              </div>
+              <div>
+                <h3 class="font-semibold text-lg mb-4 pb-2 border-b border-border">Notification Preferences</h3>
+                <div class="space-y-3">
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-xl"><div><p class="font-semibold">Essay Feedback Alerts</p><p class="text-xs text-secondary">Notify when a counselor reviews your draft</p></div><div class="w-12 h-6 bg-accent rounded-full p-1 cursor-pointer"><span class="block w-4 h-4 bg-white rounded-full ml-auto"></span></div></div>
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-xl"><div><p class="font-semibold">Meeting Reminders</p><p class="text-xs text-secondary">Remind me 24h before counselor calls</p></div><div class="w-12 h-6 bg-accent rounded-full p-1 cursor-pointer"><span class="block w-4 h-4 bg-white rounded-full ml-auto"></span></div></div>
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3.5 sm:p-4 bg-hover rounded-xl"><div><p class="font-semibold">Deadline Alerts</p><p class="text-xs text-secondary">Alert 7 days before each application deadline</p></div><div class="w-12 h-6 bg-accent rounded-full p-1 cursor-pointer"><span class="block w-4 h-4 bg-white rounded-full ml-auto"></span></div></div>
+                </div>
+              </div>
+              <div class="pt-4 flex gap-4"><button class="btn-primary px-8 py-3 text-xs font-semibold uppercase tracking-widest">Save Changes</button><button class="border border-border px-8 py-3 rounded-full text-xs font-semibold uppercase tracking-widest hover:bg-hover">Cancel</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOGOUT -->
+        <div id="logout" class="user-section hidden">
+          <div class="dashboard-card p-10 reveal active text-center max-w-lg mx-auto border-red-500/20">
+            <div class="w-20 h-20 mx-auto bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center text-red-500 text-3xl mb-6"><i class="fas fa-sign-out-alt"></i></div>
+            <h2 class="text-2xl font-semibold text-primary-text">Logout?</h2>
+            <p class="text-secondary mt-3 text-sm">Are you sure you want to end your session?</p>
+            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="login.html"><button class="bg-red-500 hover:bg-red-600 text-white font-semibold uppercase tracking-widest px-8 py-3 rounded-full text-[10px] transition shadow-lg">Logout</button></a>
+              <button onclick="activateSection('overview')" class="bg-hover border border-border px-8 py-3 rounded-full text-[10px] font-semibold uppercase tracking-widest transition">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SYSTEM STATUS / FOOTER -->
+        <div class="bg-accent-gradient rounded-3xl p-6 sm:p-8 mt-10 text-white reveal flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+          <div class="flex items-center gap-4 text-center sm:text-left"><span class="w-3 h-3 bg-white rounded-full animate-ping flex-shrink-0"></span><div><p class="font-semibold text-lg tracking-tighter uppercase">AdmitEdge Student Portal</p><p class="text-xs text-white/70 italic">Secure application tracking · real-time counselor feedback</p></div></div>
+          <div class="flex items-center gap-3"><span class="bg-white/20 backdrop-blur-md px-6 py-2.5 rounded-full text-[10px] font-semibold uppercase tracking-widest">NACAC Certified</span></div>
+        </div>
+        <footer class="mt-12 text-center text-[10px] text-secondary border-t border-border pt-8 pb-12 w-full">
+          <p class="uppercase tracking-[0.3em] font-semibold opacity-40">© 2026 AdmitEdge Admissions Counseling. All rights reserved.</p>
+          <div class="flex justify-center gap-8 mt-4 font-semibold uppercase opacity-60"><span class="hover:text-accent cursor-pointer transition">Privacy Policy</span><span class="hover:text-accent cursor-pointer transition">Terms of Service</span><span class="hover:text-accent cursor-pointer transition">FERPA & Student Privacy</span></div>
+        </footer>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      'use strict';
+      const htmlEl = document.documentElement;
+
+      // ----- 1. MOBILE MENU -----
+      const menuToggle = document.getElementById('mobile-menu-toggle');
+      const closeSidebar = document.getElementById('close-sidebar');
+      const sidebar = document.getElementById('sidebar-container');
+      const overlay = document.getElementById('mobile-overlay');
+      function toggleMobileMenu(isOpen) {
+        const isRtl = htmlEl.getAttribute('dir') === 'rtl';
+        if (isOpen) {
+          sidebar.classList.remove('-translate-x-full', 'translate-x-full');
+          sidebar.classList.add('translate-x-0');
+          overlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        } else {
+          sidebar.classList.remove('translate-x-0');
+          sidebar.classList.add(isRtl ? 'translate-x-full' : '-translate-x-full');
+          overlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      }
+      if (menuToggle) menuToggle.addEventListener('click', () => toggleMobileMenu(true));
+      if (closeSidebar) closeSidebar.addEventListener('click', () => toggleMobileMenu(false));
+      if (overlay) overlay.addEventListener('click', () => toggleMobileMenu(false));
+
+      // ----- 2. THEME -----
+      const themeBtn = document.getElementById('theme-toggle-user');
+      function setTheme(theme) {
+        htmlEl.setAttribute('data-theme', theme);
+        localStorage.setItem('AdmitEdge_theme', theme);
+        if (themeBtn) themeBtn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      }
+      const savedTheme = localStorage.getItem('AdmitEdge_theme') || 'light';
+      setTheme(savedTheme);
+      if (themeBtn) themeBtn.addEventListener('click', () => { const current = htmlEl.getAttribute('data-theme'); setTheme(current === 'light' ? 'dark' : 'light'); });
+
+      // ----- 3. RTL -----
+      const langBtn = document.getElementById('lang-toggle');
+      function setDirection(dir) { htmlEl.setAttribute('dir', dir); localStorage.setItem('AdmitEdge_lang', dir === 'rtl' ? 'ar' : 'en'); }
+      const savedLang = localStorage.getItem('AdmitEdge_lang') || 'en';
+      setDirection(savedLang === 'ar' ? 'rtl' : 'ltr');
+      if (langBtn) langBtn.addEventListener('click', () => { const currentDir = htmlEl.getAttribute('dir') || 'ltr'; setDirection(currentDir === 'ltr' ? 'rtl' : 'ltr'); });
+
+      // ----- 4. REVEAL -----
+      function checkReveal() { document.querySelectorAll('.reveal').forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add('active'); }); }
+      window.addEventListener('scroll', checkReveal);
+      window.addEventListener('load', checkReveal);
+
+      // ----- 5. NAVIGATION -----
+      const sections = ['overview','checklists','essays','meetings','colleges','resources','settings','logout'];
+      const sidebarLinks = document.querySelectorAll('.sidebar-link');
+      window.activateSection = function(sectionId) {
+        sections.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
+        const activeEl = document.getElementById(sectionId);
+        if (activeEl) { activeEl.classList.remove('hidden'); activeEl.classList.add('active'); }
+        sidebarLinks.forEach(link => { link.classList.remove('active'); if (link.dataset.section === sectionId) link.classList.add('active'); });
+        if (window.innerWidth < 1280) { toggleMobileMenu(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      };
+      sidebarLinks.forEach(link => { link.addEventListener('click', function(e) { e.preventDefault(); const section = this.dataset.section; if (section) activateSection(section); }); });
+      activateSection('overview');
+    })();
+  </script>
+</body>
+</html>
