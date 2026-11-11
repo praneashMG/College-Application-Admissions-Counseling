@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3z'/></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>404 - Page Not Found | AdmitEdge</title>
+
+    <script src="tailwind.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        :root,
+        html[data-theme='light'] {
+            --bg-body: #F8FAFC;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --accent: #2563EB;
+            --accent-dark: #1D4ED8;
+            --card-bg: #FFFFFF;
+            --border-light: #E2E8F0;
+        }
+
+        html[data-theme='dark'] {
+            color-scheme: dark;
+            --bg-body: #0A0F1D;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --accent: #3B82F6;
+            --accent-dark: #2563EB;
+            --card-bg: #131D31;
+            --border-light: #1E293B;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Subtle ambient glow */
+        .ambient-glow {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #2563EB 0%, #7C3AED 50%, #4F46E5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body class="antialiased p-4 sm:p-6 lg:p-8">
+
+    <!-- Ambient background glow -->
+    <div class="ambient-glow"></div>
+
+    <!-- Top floating bar with Logo and Dark/RTL toggles (No header bar) -->
+    <div class="fixed top-4 left-4 right-4 sm:top-6 sm:left-6 sm:right-6 flex items-center justify-between z-20 pointer-events-none">
+        <a href="index.html" class="pointer-events-auto flex items-center gap-2.5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-all">
+                <i class="fas fa-graduation-cap text-lg"></i>
+            </div>
+            <span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">Admit<span class="text-blue-600 dark:text-blue-400">Edge</span></span>
+        </a>
+
+        <div class="pointer-events-auto flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md px-2.5 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">
+            <!-- Theme Toggle -->
+            <button id="themeToggle" type="button" aria-label="Toggle Theme" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                <i class="fas fa-moon text-sm dark:hidden"></i>
+                <i class="fas fa-sun text-sm hidden dark:block"></i>
+            </button>
+            <div class="w-px h-4 bg-gray-200 dark:bg-gray-700"></div>
+            <!-- RTL Toggle -->
+            <button id="rtlToggle" type="button" aria-label="Toggle Direction" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                <i class="fas fa-right-left text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main 404 Center Card -->
+    <main class="relative z-10 w-full max-w-xl mx-auto text-center my-auto py-12">
+        <div class="bg-white/80 dark:bg-gray-800/90 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-3xl p-8 sm:p-12 shadow-2xl">
+            
+            <!-- Icon Badge -->
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-blue-50 dark:bg-blue-950/70 border border-blue-100 dark:border-blue-900/50 text-blue-600 dark:text-blue-400 mb-6 shadow-inner">
+                <i class="fas fa-compass text-3xl animate-pulse"></i>
+            </div>
+
+            <!-- Big 404 Code -->
+            <div class="font-extrabold text-7xl sm:text-8xl tracking-tight gradient-text mb-3">
+                404
+            </div>
+
+            <!-- Heading -->
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-3">
+                Admission Pathway Not Found
+            </h1>
+
+            <!-- Description -->
+            <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed mb-8 max-w-md mx-auto">
+                The page you're searching for might have graduated, had its URL updated, or is temporarily unavailable in our admissions catalog.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="index.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20 hover:shadow-lg transition-all text-sm">
+                    <i class="fas fa-home text-xs"></i>
+                    <span>Back to Homepage</span>
+                </a>
+                <a href="service.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700/70 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 transition-all text-sm">
+                    <i class="fas fa-book-open text-xs"></i>
+                    <span>Explore Programs</span>
+                </a>
+                <a href="contact.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-blue-200 dark:border-blue-900/50 transition-all text-sm">
+                    <i class="fas fa-headset text-xs"></i>
+                    <span>Get Help</span>
+                </a>
+            </div>
+
+            <!-- Quick Helpful Links -->
+            <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400 flex flex-wrap items-center justify-center gap-4">
+                <span>Popular destinations:</span>
+                <a href="counselors.html" class="text-blue-600 dark:text-blue-400 hover:underline">Meet Counselors</a>
+                <span>•</span>
+                <a href="about.html" class="text-blue-600 dark:text-blue-400 hover:underline">About Us</a>
+                <span>•</span>
+                <a href="login.html" class="text-blue-600 dark:text-blue-400 hover:underline">Student Portal</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Theme & Direction Switcher Scripts -->
+    <script>
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const rtlToggleBtn = document.getElementById('rtlToggle');
+
+        // Theme init
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        themeToggleBtn?.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            if (next === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            localStorage.setItem('theme', next);
+        });
+
+        // Direction init
+        const savedDir = localStorage.getItem('dir') || 'ltr';
+        document.documentElement.setAttribute('dir', savedDir);
+
+        rtlToggleBtn?.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('dir') || 'ltr';
+            const next = current === 'rtl' ? 'ltr' : 'rtl';
+            document.documentElement.setAttribute('dir', next);
+            localStorage.setItem('dir', next);
+        });
+    </script>
+</body>
+</html>
