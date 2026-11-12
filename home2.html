@@ -2,6 +2,18 @@
 <html lang="en" dir="ltr" data-theme="light">
 
 <head>
+    <script>
+        (function() {
+            var theme = localStorage.getItem('theme') || localStorage.getItem('AdmitEdge_theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3z'/></svg>">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -421,7 +433,7 @@
          SECTION 1: HERO / INTRODUCTION (FIT TO SCREEN - TIGHTER CONTENT)
          Asymmetric Split Layout: Value Prop & Stats + Interactive Assessment Visual
          ========================================== -->
-    <section class="relative min-h-[calc(100vh-4.5rem)] flex items-center pt-20 pb-8 lg:pt-24 lg:pb-10 overflow-hidden border-b border-gray-100 dark:border-gray-800" style="background: linear-gradient(135deg, rgba(240, 249, 255, 0.7) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(245, 243, 255, 0.6) 100%);">
+    <section class="relative min-h-[calc(100vh-4.5rem)] flex items-center pt-20 pb-8 lg:pt-24 lg:pb-10 overflow-hidden border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-sky-50/70 via-white/95 to-purple-50/60 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           
@@ -1105,6 +1117,7 @@
             const mobileTheme = document.getElementById('mobile-theme-btn');
             const applyTheme = (theme) => {
                 html.setAttribute('data-theme', theme);
+                html.classList.toggle('dark', theme === 'dark');
                 localStorage.setItem('theme', theme);
                 document.querySelectorAll('.light-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'dark'));
                 document.querySelectorAll('.dark-icon').forEach(icon => icon.classList.toggle('hidden', theme === 'light'));
