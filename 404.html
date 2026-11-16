@@ -45,16 +45,21 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        html, body {
+            height: 100%;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background-color: var(--bg-body);
             color: var(--text-primary);
-            min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: space-between;
             position: relative;
-            overflow-x: hidden;
         }
 
         /* Subtle ambient glow */
@@ -79,85 +84,89 @@
         </style>
 </head>
 
-<body class="antialiased p-4 sm:p-6 lg:p-8">
+<body class="antialiased p-3 sm:p-5 lg:p-6 flex flex-col justify-between h-screen h-[100dvh] overflow-hidden">
 
     <!-- Ambient background glow -->
     <div class="ambient-glow"></div>
 
     <!-- Top floating bar with Logo and Dark/RTL toggles (No header bar) -->
-    <div class="fixed top-4 left-4 right-4 sm:top-6 sm:left-6 sm:right-6 flex items-center justify-between z-20 pointer-events-none">
-        <a href="index.html" class="pointer-events-auto flex items-center gap-2.5 group">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-all">
-                <i class="fas fa-graduation-cap text-lg"></i>
+    <header class="w-full max-w-5xl mx-auto flex items-center justify-between z-20 py-1 sm:py-2 px-1 shrink-0">
+        <a href="index.html" class="flex items-center gap-2 sm:gap-2.5 group">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-all">
+                <i class="fas fa-graduation-cap text-sm sm:text-base"></i>
             </div>
-            <span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">Admit<span class="text-blue-600 dark:text-blue-400">Edge</span></span>
+            <span class="font-bold text-base sm:text-lg tracking-tight text-gray-900 dark:text-white">Admit<span class="text-blue-600 dark:text-blue-400">Edge</span></span>
         </a>
 
-        <div class="pointer-events-auto flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md px-2.5 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div class="flex items-center gap-1.5 sm:gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md px-2 py-1 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">
             <!-- Theme Toggle -->
-            <button id="themeToggle" type="button" aria-label="Toggle Theme" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-                <i class="fas fa-moon text-sm dark:hidden"></i>
-                <i class="fas fa-sun text-sm hidden dark:block"></i>
+            <button id="themeToggle" type="button" aria-label="Toggle Theme" class="w-7 h-7 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                <i class="fas fa-moon text-xs dark:hidden"></i>
+                <i class="fas fa-sun text-xs hidden dark:block"></i>
             </button>
-            <div class="w-px h-4 bg-gray-200 dark:bg-gray-700"></div>
+            <div class="w-px h-3 bg-gray-200 dark:bg-gray-700"></div>
             <!-- RTL Toggle -->
-            <button id="rtlToggle" type="button" aria-label="Toggle Direction" class="w-8 h-8 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-                <i class="fas fa-right-left text-xs"></i>
+            <button id="rtlToggle" type="button" aria-label="Toggle Direction" class="w-7 h-7 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                <i class="fas fa-right-left text-[10px]"></i>
             </button>
         </div>
-    </div>
+    </header>
 
     <!-- Main 404 Center Card -->
-    <main class="relative z-10 w-full max-w-xl mx-auto text-center my-auto py-12">
-        <div class="bg-white/80 dark:bg-gray-800/90 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-3xl p-8 sm:p-12 shadow-2xl">
+    <main class="relative z-10 w-full max-w-xl lg:max-w-2xl mx-auto text-center my-auto px-2 py-1 flex items-center justify-center">
+        <div class="w-full bg-white/85 dark:bg-gray-800/90 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-8 lg:p-9 shadow-xl sm:shadow-2xl">
             
             <!-- Icon Badge -->
-            <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-blue-50 dark:bg-blue-950/70 border border-blue-100 dark:border-blue-900/50 text-blue-600 dark:text-blue-400 mb-6 shadow-inner">
-                <i class="fas fa-compass text-3xl animate-pulse"></i>
+            <div class="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl bg-blue-50 dark:bg-blue-950/70 border border-blue-100 dark:border-blue-900/50 text-blue-600 dark:text-blue-400 mb-3 sm:mb-4 shadow-inner">
+                <i class="fas fa-compass text-xl sm:text-2xl animate-pulse"></i>
             </div>
 
             <!-- Big 404 Code -->
-            <div class="font-extrabold text-7xl sm:text-8xl tracking-tight gradient-text mb-3">
+            <div class="font-extrabold text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight gradient-text mb-1 sm:mb-2 leading-none">
                 404
             </div>
 
             <!-- Heading -->
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-3">
+            <h1 class="text-lg sm:text-xl md:text-2xl font-extrabold text-gray-900 dark:text-white mb-2">
                 Admission Pathway Not Found
             </h1>
 
             <!-- Description -->
-            <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed mb-8 max-w-md mx-auto">
+            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-5 sm:mb-6 max-w-md mx-auto">
                 The page you're searching for might have graduated, had its URL updated, or is temporarily unavailable in our admissions catalog.
             </p>
 
             <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <a href="index.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20 hover:shadow-lg transition-all text-sm">
-                    <i class="fas fa-home text-xs"></i>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 max-w-xl mx-auto">
+                <a href="index.html" class="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20 hover:shadow-lg transition-all text-xs sm:text-sm whitespace-nowrap min-h-[42px]">
+                    <i class="fas fa-home text-xs shrink-0"></i>
                     <span>Back to Homepage</span>
                 </a>
-                <a href="service.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700/70 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 transition-all text-sm">
-                    <i class="fas fa-book-open text-xs"></i>
+                <a href="service.html" class="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700/70 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 transition-all text-xs sm:text-sm whitespace-nowrap min-h-[42px]">
+                    <i class="fas fa-book-open text-xs shrink-0"></i>
                     <span>Explore Programs</span>
                 </a>
-                <a href="contact.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-blue-200 dark:border-blue-900/50 transition-all text-sm">
-                    <i class="fas fa-headset text-xs"></i>
+                <a href="contact.html" class="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-blue-200 dark:border-blue-900/50 transition-all text-xs sm:text-sm whitespace-nowrap min-h-[42px]">
+                    <i class="fas fa-headset text-xs shrink-0"></i>
                     <span>Get Help</span>
                 </a>
             </div>
 
             <!-- Quick Helpful Links -->
-            <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400 flex flex-wrap items-center justify-center gap-4">
-                <span>Popular destinations:</span>
+            <div class="mt-4 sm:mt-5 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700 text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+                <span class="w-full sm:w-auto">Popular destinations:</span>
                 <a href="counselors.html" class="text-blue-600 dark:text-blue-400 hover:underline">Meet Counselors</a>
-                <span>•</span>
+                <span class="hidden sm:inline">•</span>
                 <a href="about.html" class="text-blue-600 dark:text-blue-400 hover:underline">About Us</a>
-                <span>•</span>
+                <span class="hidden sm:inline">•</span>
                 <a href="login.html" class="text-blue-600 dark:text-blue-400 hover:underline">Student Portal</a>
             </div>
 
         </div>
+    </main>
+
+    <!-- Bottom footer pill / spacer for vertical balance -->
+    <div class="shrink-0 h-4 sm:h-6"></div>
     </main>
 
     <!-- Theme & Direction Switcher Scripts -->
